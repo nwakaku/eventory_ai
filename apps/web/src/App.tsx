@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Routes, Route } from "react-router-dom"
+import { Routes, Route, useNavigate } from "react-router-dom"
 import { AppLayout } from "@/components/layout/app-layout"
 import { LandingPage } from "@/pages/landing-page"
 import { DashboardPage } from "@/pages/dashboard-page"
@@ -14,29 +14,104 @@ import { ReportsPage } from "@/pages/reports-page"
 
 function AppContent() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const navigate = useNavigate()
 
-  if (!isAuthenticated) {
-    return <LandingPage onLogin={() => setIsAuthenticated(true)} />
+  const handleLogin = () => {
+    setIsAuthenticated(true)
+    navigate("/dashboard")
+  }
+
+  const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+    if (!isAuthenticated) {
+      return <LandingPage onLogin={handleLogin} />
+    }
+    return <AppLayout>{children}</AppLayout>
   }
 
   return (
-    <AppLayout>
-      <Routes>
-        <Route path="/" element={<DashboardPage />} />
-        <Route path="/products" element={<ProductsPage />} />
-        <Route path="/raw-materials" element={<RawMaterialsPage />} />
-        <Route path="/inventory" element={<InventoryOverviewPage />} />
-        <Route path="/production" element={<ProductionPage />} />
-        <Route path="/sales-orders" element={<SalesOrdersPage />} />
-        <Route path="/purchase-orders" element={<PurchaseOrdersPage />} />
-        <Route path="/suppliers" element={<SuppliersPage />} />
-        <Route path="/reports" element={<ReportsPage />} />
-        <Route
-          path="/settings"
-          element={<div className="text-foreground">Settings</div>}
-        />
-      </Routes>
-    </AppLayout>
+    <Routes>
+      <Route path="/" element={<LandingPage onLogin={handleLogin} />} />
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <DashboardPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/products"
+        element={
+          <ProtectedRoute>
+            <ProductsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/raw-materials"
+        element={
+          <ProtectedRoute>
+            <RawMaterialsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/inventory"
+        element={
+          <ProtectedRoute>
+            <InventoryOverviewPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/production"
+        element={
+          <ProtectedRoute>
+            <ProductionPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/sales-orders"
+        element={
+          <ProtectedRoute>
+            <SalesOrdersPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/purchase-orders"
+        element={
+          <ProtectedRoute>
+            <PurchaseOrdersPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/suppliers"
+        element={
+          <ProtectedRoute>
+            <SuppliersPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/reports"
+        element={
+          <ProtectedRoute>
+            <ReportsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <div className="text-foreground">Settings</div>
+          </ProtectedRoute>
+        }
+      />
+    </Routes>
   )
 }
 

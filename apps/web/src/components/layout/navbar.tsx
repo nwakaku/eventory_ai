@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react"
-import { Search, Bell, ChevronDown, LogOut } from "lucide-react"
+import { Search, Bell, ChevronDown, LogOut, Moon, Sun } from "lucide-react"
 import { Button } from "@workspace/ui/components/button"
 import { supabase } from "@/lib/supabase"
 import { signOut } from "@/lib/auth"
+import { useTheme } from "@/hooks/useTheme"
 
 interface NavbarProps {
   sidebarCollapsed?: boolean
@@ -15,16 +16,21 @@ interface User {
 export function Navbar({ sidebarCollapsed }: NavbarProps) {
   const [user, setUser] = useState<User | null>(null)
   const [showDropdown, setShowDropdown] = useState(false)
+  const { theme, toggleTheme } = useTheme()
 
   useEffect(() => {
     const getUser = async () => {
       if (!supabase) return
-      const { data: { session } } = await supabase.auth.getSession()
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
       setUser(session?.user || null)
     }
     getUser()
 
-    const { data: { subscription } } = supabase?.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: { subscription },
+    } = supabase?.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user || null)
     }) || { data: { subscription: { unsubscribe: () => {} } } }
 
@@ -43,7 +49,7 @@ export function Navbar({ sidebarCollapsed }: NavbarProps) {
 
   return (
     <header
-      className="flex h-16 items-center justify-between border-b border-border bg-card px-6 transition-all duration-300"
+      className="flex h-16 items-center justify-between border-b border-border bg-card px-4 transition-all duration-300"
       style={{ marginLeft: sidebarCollapsed ? "4rem" : "16rem" }}
     >
       <div className="flex flex-1 items-center">
@@ -61,6 +67,19 @@ export function Navbar({ sidebarCollapsed }: NavbarProps) {
         <Button
           variant="ghost"
           size="icon"
+          className="h-10 w-10 rounded-lg"
+          onClick={toggleTheme}
+        >
+          {theme === "dark" ? (
+            <Sun className="h-5 w-5 text-muted-foreground" />
+          ) : (
+            <Moon className="h-5 w-5 text-muted-foreground" />
+          )}
+        </Button>
+
+        <Button
+          variant="ghost"
+          size="icon"
           className="relative h-10 w-10 rounded-lg"
         >
           <Bell className="h-5 w-5 text-muted-foreground" />
@@ -68,7 +87,7 @@ export function Navbar({ sidebarCollapsed }: NavbarProps) {
         </Button>
 
         <div className="relative">
-          <button 
+          <button
             className="flex items-center gap-3 rounded-lg p-1.5 transition-colors hover:bg-accent"
             onClick={() => setShowDropdown(!showDropdown)}
           >
@@ -76,18 +95,22 @@ export function Navbar({ sidebarCollapsed }: NavbarProps) {
               {getInitials(user?.email)}
             </div>
             <div className="hidden items-center gap-1 text-sm md:flex">
-              <span className="font-medium text-foreground">{user?.email || "User"}</span>
+              <span className="font-medium text-foreground">
+                {user?.email || "User"}
+              </span>
               <ChevronDown className="h-4 w-4 text-muted-foreground" />
             </div>
           </button>
 
           {showDropdown && (
-            <div className="absolute right-0 top-full mt-2 w-56 rounded-lg border border-border bg-card shadow-lg">
+            <div className="absolute top-full right-0 mt-2 w-56 rounded-lg border border-border bg-card shadow-lg">
               <div className="border-b border-border p-3">
-                <p className="text-sm font-medium text-foreground">{user?.email || "User"}</p>
+                <p className="text-sm font-medium text-foreground">
+                  {user?.email || "User"}
+                </p>
               </div>
               <div className="p-2">
-                <button 
+                <button
                   onClick={handleSignOut}
                   className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-destructive hover:bg-destructive/10"
                 >

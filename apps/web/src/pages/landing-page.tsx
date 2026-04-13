@@ -1,144 +1,496 @@
-import { ArrowRight } from "lucide-react"
 import { Button } from "@workspace/ui/components/button"
+import { LandingLayout } from "@/components/layout/landing-layout"
+import {
+  ShoppingCart,
+  TrendingUp,
+  Warehouse,
+  Settings,
+  ChevronRight,
+  Star,
+  Check,
+  ArrowRight,
+} from "lucide-react"
 
-export function LandingPage({ onLogin }: { onLogin: () => void }) {
+function DashboardMockup({ variant = "dark" }: { variant?: "dark" | "light" }) {
+  const isDark = variant === "dark"
   return (
-    <div className="min-h-screen bg-background">
-      <nav className="fixed top-0 right-0 left-0 z-50 flex h-16 items-center justify-between border-b border-border/50 bg-white/80 px-8 backdrop-blur-md">
-        <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-            <svg
-              className="h-5 w-5 text-white"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-              <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-              <line x1="12" y1="22.08" x2="12" y2="12" />
-            </svg>
+    <div
+      className={`mx-auto overflow-hidden rounded-2xl ${
+        isDark ? "bg-[#0d2818]" : "bg-white"
+      } shadow-2xl ring-1 ${isDark ? "ring-[#145736]" : "ring-[#dcfce7]"} w-full max-w-4xl`}
+      style={{ aspectRatio: "16/10" }}
+    >
+      <div className="relative h-full w-full">
+        <img
+          src="https://cdn.dribbble.com/userupload/17730954/file/original-1ca571d72aed46b341defcb0bf9a18e1.png?resize=2048x1536&vertical=center"
+          alt="Dashboard Preview"
+          className="h-full w-full object-contain"
+        />
+        <div
+          className={`absolute inset-0 ${
+            isDark ? "bg-[#0d2818]/40" : "bg-white/10"
+          } pointer-events-none`}
+        />
+      </div>
+    </div>
+  )
+}
+
+function FeatureItem({
+  icon: Icon,
+  title,
+  description,
+}: {
+  icon: React.ElementType
+  title: string
+  description: string
+}) {
+  return (
+    <div className="flex gap-4">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+        <Icon className="h-5 w-5 text-primary" />
+      </div>
+      <div>
+        <h4 className="font-semibold text-foreground">{title}</h4>
+        <p className="mt-1 text-sm text-muted-foreground">{description}</p>
+      </div>
+    </div>
+  )
+}
+
+function IntegrationLogo({ name, logo }: { name: string; logo: string }) {
+  return (
+    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-card p-1.5 shadow-sm sm:h-14 sm:w-14 sm:p-2 md:h-16 md:w-16">
+      <img
+        src={logo}
+        alt={name}
+        className="max-h-full max-w-full object-contain"
+      />
+    </div>
+  )
+}
+
+function FeatureCard({
+  title,
+  description,
+  image,
+}: {
+  title: string
+  description: string
+  image: string
+}) {
+  return (
+    <div className="group overflow-hidden rounded-2xl bg-card shadow-lg transition-shadow hover:shadow-xl">
+      <div className="aspect-[4/3] overflow-hidden">
+        <img
+          src={image}
+          alt={title}
+          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+      </div>
+      <div className="p-4 sm:p-6">
+        <h3 className="text-base font-semibold text-card-foreground sm:text-lg">
+          {title}
+        </h3>
+        <p className="mt-2 text-sm text-muted-foreground">{description}</p>
+      </div>
+    </div>
+  )
+}
+
+export function LandingPage({ onLogin }: { onLogin?: () => void }) {
+  return (
+    <LandingLayout onLoginSuccess={onLogin}>
+      <section
+        id="hero"
+        className="relative overflow-hidden bg-[var(--lavender)] px-4 sm:px-6"
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-[var(--lavender)] via-[var(--lavender)] to-[var(--lavender-dark)]" />
+        <div className="absolute top-1/4 right-1/4 h-64 w-64 rounded-full bg-[var(--lavender-dark)]/30 blur-3xl sm:h-96 sm:w-96" />
+        <div className="absolute bottom-1/4 left-1/4 h-48 w-48 rounded-full bg-[var(--lavender-dark)]/20 blur-2xl sm:h-64 sm:w-64" />
+
+        <div className="relative z-10 mx-auto max-w-6xl px-4 py-16 sm:py-20 md:py-32">
+          <div className="text-center">
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl md:text-5xl lg:text-6xl">
+              Simplify your inventory
+              <br className="hidden sm:block" />
+              and scale your business
+            </h1>
+            <p className="mx-auto mt-4 max-w-xl px-2 text-base text-muted-foreground sm:mt-6 sm:max-w-2xl sm:text-lg md:text-xl">
+              Stop wrestling with spreadsheets and overpriced ERPs. Get
+              real-time visibility of your stock, orders, and production in one
+              intuitive platform.
+            </p>
+
+            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:mt-10 sm:flex-row sm:gap-4">
+              <Button
+                variant="outline"
+                size="lg"
+                className="h-11 w-full px-6 text-sm font-medium sm:h-12 sm:w-auto sm:px-8 sm:text-base"
+              >
+                Book demo
+              </Button>
+              <Button
+                size="lg"
+                className="h-11 w-full gap-2 px-6 text-sm font-medium sm:h-12 sm:w-auto sm:px-8 sm:text-base"
+                onClick={onLogin}
+              >
+                Get started free
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
+
+            <div className="mt-10 px-2 sm:mt-16">
+              <DashboardMockup variant="dark" />
+            </div>
           </div>
-          <span className="text-lg font-semibold text-foreground">
-            Enventory
-          </span>
         </div>
-        <Button variant="ghost" className="text-sm" onClick={onLogin}>
-          Login
-        </Button>
-      </nav>
+      </section>
 
-      <section className="relative flex min-h-screen items-center justify-center overflow-hidden pt-16">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10" />
-        <div className="absolute top-1/4 right-1/4 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
-        <div className="absolute bottom-1/4 left-1/4 h-64 w-64 rounded-full bg-primary/5 blur-2xl" />
+      <section
+        id="stats"
+        className="border-t border-border bg-background px-4 py-12 sm:px-6 sm:py-16 md:py-20"
+      >
+        <div className="mx-auto max-w-6xl">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-6">
+            <div className="rounded-xl border border-border bg-card p-6 text-center shadow-sm sm:p-8">
+              <div className="text-4xl font-bold text-primary sm:text-5xl md:text-6xl">
+                60%
+              </div>
+              <div className="mt-2 px-2 text-xs text-muted-foreground sm:mt-3 sm:text-sm">
+                Higher return on average per order, per year
+              </div>
+            </div>
+            <div className="rounded-xl border border-border bg-card p-6 text-center shadow-sm sm:p-8">
+              <div className="text-4xl font-bold text-primary sm:text-5xl md:text-6xl">
+                1.2x
+              </div>
+              <div className="mt-2 text-xs text-muted-foreground sm:mt-3 sm:text-sm">
+                Faster time-to-market
+              </div>
+            </div>
+            <div className="rounded-xl border border-border bg-card p-6 text-center shadow-sm sm:p-8">
+              <div className="text-4xl font-bold text-primary sm:text-5xl md:text-6xl">
+                6 weeks
+              </div>
+              <div className="mt-2 text-xs text-muted-foreground sm:mt-3 sm:text-sm">
+                To fully implement vs 6–12 months for the usual ERPs
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-        <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
-          <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-sm text-primary">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
-            </span>
-            Now in beta
+      <section
+        id="features"
+        className="bg-background px-4 py-12 sm:px-6 sm:py-16 md:py-24"
+      >
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-8 text-center sm:mb-12">
+            <h2 className="text-2xl font-semibold text-foreground sm:text-3xl md:text-4xl">
+              Getting your products to customers faster
+            </h2>
+            <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground sm:mt-4 sm:max-w-2xl sm:text-lg">
+              Managing orders across all channels has never been easier. From
+              order creation to fulfillment, keep everything in sync.
+            </p>
           </div>
 
-          <h1 className="mb-6 text-5xl font-semibold tracking-tight text-foreground">
-            Inventory management
-            <br />
-            <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-              made simple
-            </span>
-          </h1>
+          <div className="grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
+            <div className="order-2 lg:order-1">
+              <div className="space-y-6 sm:space-y-8">
+                <FeatureItem
+                  icon={TrendingUp}
+                  title="Real-time inventory tracking"
+                  description="Monitor stock levels across multiple locations. Get instant alerts when items run low and auto-reorder to prevent stockouts."
+                />
+                <FeatureItem
+                  icon={ShoppingCart}
+                  title="Seamless order management"
+                  description="Process orders from multiple channels in one place. Sync inventory automatically and fulfill orders faster."
+                />
+                <FeatureItem
+                  icon={Warehouse}
+                  title="Multi-location support"
+                  description="Manage inventory across warehouses, stores, and third-party logistics. Transfer stock between locations with a few clicks."
+                />
+                <FeatureItem
+                  icon={Settings}
+                  title="Production planning"
+                  description="Track manufacturing processes from raw materials to finished goods. Optimize production schedules and reduce waste."
+                />
+              </div>
+            </div>
 
-          <p className="mx-auto mb-10 max-w-xl text-lg leading-relaxed text-muted-foreground">
-            Track raw materials, manage production, and stay on top of stock
-            levels. All in one clean, intuitive interface built for modern
-            manufacturers.
+            <div className="order-1 lg:order-2">
+              <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-xl">
+                <div className="border-b border-border bg-muted/50 p-3 sm:p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex gap-1.5">
+                      <div className="h-2.5 w-2.5 rounded-full bg-red-400 sm:h-3 sm:w-3" />
+                      <div className="h-2.5 w-2.5 rounded-full bg-yellow-400 sm:h-3 sm:w-3" />
+                      <div className="h-2.5 w-2.5 rounded-full bg-green-400 sm:h-3 sm:w-3" />
+                    </div>
+                    <span className="text-xs text-muted-foreground sm:text-sm">
+                      Dashboard Overview
+                    </span>
+                  </div>
+                </div>
+                <div className="p-4 sm:p-6">
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                    {[
+                      {
+                        label: "Total Products",
+                        value: "1,234",
+                        trend: "+12%",
+                      },
+                      { label: "Low Stock Items", value: "23", trend: "-5%" },
+                      { label: "Pending Orders", value: "89", trend: "+8%" },
+                      {
+                        label: "Today's Sales",
+                        value: "$12.5k",
+                        trend: "+23%",
+                      },
+                    ].map((item) => (
+                      <div
+                        key={item.label}
+                        className="rounded-lg border border-border bg-background p-3 sm:p-4"
+                      >
+                        <div className="truncate text-xs text-muted-foreground sm:text-sm">
+                          {item.label}
+                        </div>
+                        <div className="mt-1 text-xl font-bold text-foreground sm:text-2xl">
+                          {item.value}
+                        </div>
+                        <div className="text-xs text-primary">{item.trend}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="integrations"
+        className="bg-secondary px-4 py-12 sm:px-6 sm:py-16 md:py-24"
+      >
+        <div className="mx-auto max-w-6xl text-center">
+          <h2 className="text-2xl font-semibold text-foreground sm:text-3xl md:text-4xl">
+            Integrate your tools and streamline your workflows
+          </h2>
+          <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground sm:mt-4 sm:max-w-2xl sm:text-lg">
+            Connect Enventory with the tools you already use. Sync data
+            automatically and eliminate manual entry.
           </p>
 
-          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Button
-              size="lg"
-              className="h-12 gap-2 px-8 text-base font-medium"
-              onClick={onLogin}
-            >
-              Get Started
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="h-12 px-8 text-base font-medium"
-            >
-              Watch Demo
-            </Button>
-          </div>
-
-          <div className="mt-16 flex items-center justify-center gap-8 text-sm text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <svg
-                className="h-5 w-5 text-[#00C853]"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              Free 14-day trial
-            </div>
-            <div className="flex items-center gap-2">
-              <svg
-                className="h-5 w-5 text-[#00C853]"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              No credit card required
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="border-t border-border/50 bg-white/50 py-20">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="grid gap-8 md:grid-cols-3">
+          <div className="mt-8 flex flex-wrap justify-center gap-4 sm:mt-10 sm:gap-6 md:gap-8">
             {[
               {
-                title: "Real-time Tracking",
-                desc: "Monitor stock levels across all warehouses with instant updates",
+                name: "Shopify",
+                logo: "https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1776091655/Shopify-com_Logo_1_hpas4v.png",
               },
               {
-                title: "Smart Alerts",
-                desc: "Get notified when inventory drops below threshold levels",
+                name: "Stripe",
+                logo: "https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1776091544/Stripe_Logo_1_idjdhl.png",
               },
               {
-                title: "Production Planning",
-                desc: "Streamline manufacturing with integrated production orders",
+                name: "Slack",
+                logo: "https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1776091427/Icon_jfrzf2.jpg",
               },
-            ].map((feature) => (
-              <div
-                key={feature.title}
-                className="rounded-2xl border border-border bg-card p-6"
-              >
-                <h3 className="mb-2 font-semibold text-foreground">
-                  {feature.title}
-                </h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  {feature.desc}
-                </p>
-              </div>
+              {
+                name: "QuickBooks",
+                logo: "https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1776091331/idFyhAFeIL_1776090324830_ms85zg.png",
+              },
+              {
+                name: "API",
+                logo: "https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1776091330/Icon_sp0giz.png",
+              },
+              {
+                name: "Zapier",
+                logo: "https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1776091331/idgA2tQJF0_1776091167588_ulkhda.jpg",
+              },
+              {
+                name: "Xero",
+                logo: "https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1776091330/xero-accounting_udxwkq.png",
+              },
+            ].map(({ name, logo }) => (
+              <IntegrationLogo key={name} name={name} logo={logo} />
             ))}
+          </div>
+
+          <a
+            href="#"
+            className="mt-6 inline-flex items-center gap-1 text-sm text-primary hover:underline sm:mt-8 sm:text-base"
+          >
+            See all integrations
+            <ChevronRight className="h-4 w-4" />
+          </a>
+        </div>
+      </section>
+
+      <section
+        id="visibility"
+        className="bg-background px-4 py-12 sm:px-6 sm:py-16 md:py-24"
+      >
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-8 text-center sm:mb-12">
+            <h2 className="text-2xl font-semibold text-foreground sm:text-3xl md:text-4xl">
+              Get the inventory visibility you need
+              <br className="hidden sm:block" />
+              <span className="hidden sm:inline"> </span>
+              whether you are selling, manufacturing, or both
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <FeatureCard
+              image="https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1776097589/track-inventory_csbdb9.webp"
+              title="Trace every batch and every lot"
+              description="Complete traceability from raw materials to finished goods. Meet compliance requirements with detailed audit trails."
+            />
+            <FeatureCard
+              image="https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1776097605/manufacturing-control_ezlvr4.webp"
+              title="Track production as it happens"
+              description="Real-time production monitoring with instant feedback. Identify bottlenecks and optimize workflows on the fly."
+            />
+            <FeatureCard
+              image="https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1776097640/omnichannel-sales_koqhhb.webp"
+              title="Sync sales across every channel"
+              description="Unified inventory across all your sales channels. Prevent overselling with real-time stock updates everywhere."
+            />
           </div>
         </div>
       </section>
-    </div>
+
+      <section
+        id="support"
+        className="bg-secondary px-4 py-12 sm:px-6 sm:py-16 md:py-24"
+      >
+        <div className="mx-auto max-w-6xl">
+          <div className="grid gap-6 sm:gap-8 lg:grid-cols-2">
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6 md:p-8">
+              <h3 className="text-lg font-semibold text-card-foreground sm:text-xl md:text-2xl">
+                Personalized implementation
+              </h3>
+              <p className="mt-2 text-sm text-muted-foreground sm:text-base">
+                Get up and running quickly with our guided onboarding process
+              </p>
+
+              <div className="mt-6 space-y-3 sm:mt-8 sm:space-y-4">
+                {[
+                  "Kickoff call with your dedicated onboarding specialist",
+                  "Data migration from your existing systems",
+                  "Custom workflow configuration for your business",
+                  "Team training sessions (live or recorded)",
+                  "Go-live support for the first 30 days",
+                ].map((step, i) => (
+                  <div key={step} className="flex items-start gap-3">
+                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground sm:h-6 sm:w-6 sm:text-sm">
+                      {i + 1}
+                    </span>
+                    <span className="text-sm text-card-foreground sm:text-base">
+                      {step}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <a
+                href="#"
+                className="mt-5 inline-flex items-center gap-1 text-sm text-primary hover:underline sm:mt-6 sm:text-base"
+              >
+                Learn more
+                <ChevronRight className="h-4 w-4" />
+              </a>
+            </div>
+
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6 md:p-8">
+              <h3 className="text-lg font-semibold text-card-foreground sm:text-xl md:text-2xl">
+                Continued success
+              </h3>
+              <p className="mt-2 text-sm text-muted-foreground sm:text-base">
+                Ongoing support to help you grow and optimize
+              </p>
+
+              <div className="mt-6 space-y-3 sm:mt-8 sm:space-y-4">
+                {[
+                  "24/7 customer support via chat and email",
+                  "Regular product updates with new features",
+                  "Access to exclusive webinars and training content",
+                  "Dedicated customer success manager",
+                  "Priority feature requests and feedback loop",
+                ].map((item) => (
+                  <div key={item} className="flex items-start gap-3">
+                    <Check className="h-5 w-5 shrink-0 text-primary" />
+                    <span className="text-sm text-card-foreground sm:text-base">
+                      {item}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <a
+                href="#"
+                className="mt-5 inline-flex items-center gap-1 text-sm text-primary hover:underline sm:mt-6 sm:text-base"
+              >
+                Learn more
+                <ChevronRight className="h-4 w-4" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="testimonial"
+        className="bg-background px-4 py-12 sm:px-6 sm:py-16 md:py-24"
+      >
+        <div className="mx-auto max-w-4xl">
+          <div className="rounded-2xl border border-border bg-card p-6 shadow-lg sm:p-8 md:p-12">
+            <div className="mb-4 text-center sm:mb-6">
+              <span className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
+                Social Proof
+              </span>
+            </div>
+
+            <blockquote className="px-2 text-center text-base font-medium text-card-foreground italic sm:text-xl md:text-2xl">
+              "Enventory completely transformed how we manage our inventory. We
+              went from spending hours on spreadsheets every week to having
+              real-time visibility of our entire operation. The implementation
+              was incredibly smooth, and the support team has been fantastic."
+            </blockquote>
+
+            <div className="mt-6 flex flex-col items-center sm:mt-8">
+              <div className="h-14 w-14 overflow-hidden rounded-full bg-muted sm:h-16 sm:w-16">
+                <div className="flex h-full w-full items-center justify-center bg-primary/20">
+                  <span className="text-base font-semibold text-primary sm:text-lg">
+                    MJ
+                  </span>
+                </div>
+              </div>
+              <div className="mt-3 text-center sm:mt-4">
+                <div className="font-semibold text-card-foreground">
+                  Michael Johnson
+                </div>
+                <div className="text-xs text-muted-foreground sm:text-sm">
+                  Operations Director, TechCraft Manufacturing
+                </div>
+              </div>
+              <div className="mt-2 flex gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className="h-3.5 w-3.5 fill-[#f59e0b] text-[#f59e0b] sm:h-4 sm:w-4"
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </LandingLayout>
   )
 }
