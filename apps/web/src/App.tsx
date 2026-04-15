@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom"
 import { AppLayout } from "@/components/layout/app-layout"
 import { LandingPage } from "@/pages/landing-page"
+import { AuthCallbackPage } from "@/pages/auth-callback-page"
 import { DashboardPage } from "@/pages/dashboard-page"
 import { ProductsPage } from "@/pages/products-page"
 import { InventoryOverviewPage } from "@/pages/inventory-overview-page"
@@ -103,6 +104,7 @@ function AppContent() {
 
   return (
     <Routes>
+      <Route path="/auth/callback" element={<AuthCallbackPage />} />
       <Route
         path="/"
         element={
