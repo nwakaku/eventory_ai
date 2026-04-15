@@ -19,21 +19,13 @@ export function LandingNavbar({ onLogin }: LandingNavbarProps) {
   return (
     <>
       <nav className="fixed top-0 right-0 left-0 z-50 border-b border-border bg-background/95 backdrop-blur-md">
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:h-16 sm:px-6">
+        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between sm:h-16">
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary sm:h-9 sm:w-9">
-              <svg
-                className="h-4 w-4 text-white sm:h-5 sm:w-5"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-                <line x1="12" y1="22.08" x2="12" y2="12" />
-              </svg>
-            </div>
+            <img
+              src="https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1746566762/growth_ggcqxd.png"
+              alt="Enventory Logo"
+              className="h-8 w-8 object-contain sm:h-9 sm:w-9"
+            />
             <span className="text-base font-semibold text-foreground sm:text-lg">
               Enventory
             </span>

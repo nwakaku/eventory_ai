@@ -3,6 +3,7 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
 @import "../../../../apps/web/src/styles/animations.css";
+@import "aos/dist/aos.css";
 
 @custom-variant dark (&:is(.dark *));
 @source "../../../../apps/**/*.{ts,tsx}";
@@ -146,6 +147,15 @@
   }
   html {
     scroll-behavior: smooth;
+  }
+  button {
+    @apply cursor-pointer;
+  }
+  a {
+    @apply cursor-pointer;
+  }
+  [role="button"] {
+    @apply cursor-pointer;
   }
 }
 

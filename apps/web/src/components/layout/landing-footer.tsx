@@ -1,5 +1,3 @@
-import { Package } from "lucide-react"
-
 function TwitterIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor">
@@ -48,9 +46,11 @@ export function LandingFooter() {
         <div className="flex flex-col gap-10 lg:flex-row lg:justify-between lg:gap-12">
           <div className="lg:w-64">
             <div className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary sm:h-10 sm:w-10">
-                <Package className="h-5 w-5 text-white sm:h-6 sm:w-6" />
-              </div>
+              <img
+                src="https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1746566762/growth_ggcqxd.png"
+                alt="Enventory"
+                className="h-9 w-9 object-contain sm:h-10 sm:w-10"
+              />
               <span className="text-xl font-semibold text-white sm:text-2xl">
                 Enventory
               </span>

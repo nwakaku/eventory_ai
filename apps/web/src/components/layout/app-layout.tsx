@@ -1,14 +1,11 @@
 import { useState } from "react"
+import { Outlet } from "react-router-dom"
 import { Sidebar } from "./sidebar"
 import { Navbar } from "./navbar"
 import { ChatBot } from "@/components/chatbot"
 import { cn } from "@workspace/ui/lib/utils"
 
-interface AppLayoutProps {
-  children: React.ReactNode
-}
-
-export function AppLayout({ children }: AppLayoutProps) {
+export function AppLayout() {
   const [collapsed, setCollapsed] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -29,7 +26,9 @@ export function AppLayout({ children }: AppLayoutProps) {
       >
         <Navbar onMenuClick={() => setMobileMenuOpen(true)} />
 
-        <main className="flex-1 overflow-auto p-4 sm:p-6">{children}</main>
+        <main className="flex-1 overflow-auto p-4 sm:p-6">
+          <Outlet />
+        </main>
       </div>
 
       <ChatBot />

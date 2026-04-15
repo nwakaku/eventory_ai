@@ -79,12 +79,12 @@ export function Navbar({ onMenuClick }: NavbarProps) {
           <Menu className="h-5 w-5" />
         </Button>
 
-        <div className="relative hidden max-w-md flex-1 md:block">
+        <div className="relative hidden max-w-lg flex-1 md:block">
           <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             type="text"
             placeholder="Search products, orders, suppliers..."
-            className="h-10 w-full max-w-xs rounded-lg border border-input bg-background pr-4 pl-10 text-sm placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none lg:max-w-md"
+            className="h-10 w-full rounded-lg border border-input bg-background pr-4 pl-10 text-sm placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none lg:max-w-lg"
           />
         </div>
 

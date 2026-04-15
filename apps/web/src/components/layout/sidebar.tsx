@@ -67,18 +67,22 @@ export function Sidebar({
       <div className="flex h-16 items-center justify-between border-b border-sidebar-border px-4">
         {!collapsed && !isMobile && (
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-              <Package className="h-4 w-4 text-primary-foreground" />
-            </div>
+            <img
+              src="https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1746566762/growth_ggcqxd.png"
+              alt="Enventory"
+              className="h-8 w-8 object-contain"
+            />
             <span className="font-semibold text-sidebar-foreground">
               Enventory
             </span>
           </div>
         )}
         {(collapsed || isMobile) && (
-          <div className="mx-auto flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-            <Package className="h-4 w-4 text-primary-foreground" />
-          </div>
+          <img
+            src="https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1746566762/growth_ggcqxd.png"
+            alt="Enventory"
+            className="mx-auto h-8 w-8 object-contain"
+          />
         )}
         {isMobile && (
           <button onClick={onMobileClose} className="p-2">

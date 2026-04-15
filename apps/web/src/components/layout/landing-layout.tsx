@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { LandingNavbar } from "./landing-navbar"
 import { LandingFooter } from "./landing-footer"
 import { LoginModal } from "@/components/login-modal"
@@ -14,6 +14,14 @@ export function LandingLayout({
   onLoginSuccess,
 }: LandingLayoutProps) {
   const [showModal, setShowModal] = useState(false)
+
+  useEffect(() => {
+    const openModal = () => setShowModal(true)
+    ;(window as any).__openAuthModal = openModal
+    return () => {
+      delete (window as any).__openAuthModal
+    }
+  }, [])
 
   const handleModalSuccess = () => {
     setShowModal(false)
@@ -33,4 +41,10 @@ export function LandingLayout({
       <ChatBot />
     </div>
   )
+}
+
+export const openAuthModal = () => {
+  if (typeof window !== "undefined") {
+    ;(window as any).__openAuthModal?.()
+  }
 }

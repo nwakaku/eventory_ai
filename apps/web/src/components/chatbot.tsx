@@ -12,6 +12,7 @@ import { Button } from "@workspace/ui/components/button"
 import { useGetAllProducts } from "@/hooks/useProducts"
 import { useGetAllTransactions } from "@/hooks/useTransactions"
 import { useGetAllSuppliers } from "@/hooks/useSuppliers"
+import { GoogleGenAI } from "@google/genai"
 
 interface Message {
   id: string
@@ -36,6 +37,73 @@ const formatNGN = (amount: number): string => {
   return `₦${amount.toLocaleString("en-NG", { minimumFractionDigits: 0 })}`
 }
 
+const genAI = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY })
+
+const generateAIResponse = async (
+  userMessage: string,
+  context: {
+    products: any[]
+    transactions: any[]
+    suppliers: any[]
+  }
+): Promise<string> => {
+  const { products, transactions, suppliers } = context
+
+  const inventorySummary = products
+    ? `Total products: ${products.length}\n${products
+        .slice(0, 10)
+        .map(
+          (p: any) =>
+            `- ${p.name}: stock=${p.stock_on_hand || 0}, price=${formatNGN(p.unit_price || 0)}`
+        )
+        .join("\n")}`
+    : "No products data available"
+
+  const transactionsSummary = transactions
+    ? `Recent transactions: ${transactions.length}\nTotal value: ${formatNGN(
+        transactions.reduce((sum: number, t: any) => sum + (t.total || 0), 0)
+      )}`
+    : "No transactions data available"
+
+  const suppliersSummary = suppliers
+    ? `Total suppliers: ${suppliers.length}`
+    : "No suppliers data available"
+
+  const prompt = `You are an AI assistant for Enventory, an inventory management system.
+
+Current data context:
+- Products:\n${inventorySummary}
+- Transactions:\n${transactionsSummary}
+- Suppliers: ${suppliersSummary}
+
+User question: ${userMessage}
+
+Instructions:
+1. Answer questions about inventory, products, sales, suppliers, stock levels, and business insights
+2. Use the data provided above to give accurate, specific answers with real numbers
+3. Format your response with emojis for better readability (📊 for data, 💰 for money, 📦 for products, ⚠️ for alerts, etc.)
+4. Be concise but informative
+5. If asked about specific products or data, reference the actual numbers from the context
+6. If you don't have enough information to answer, say so
+
+Respond directly with your answer:`
+
+  try {
+    const response = await genAI.models.generateContent({
+      model: "gemini-3-flash-preview",
+      contents: prompt,
+    })
+    const text =
+      response.candidates?.[0]?.content?.parts?.[0]?.text ||
+      response.text ||
+      "I apologize, but I couldn't generate a response. Please try again."
+    return text
+  } catch (error) {
+    console.error("Gemini API error:", error)
+    return "I'm experiencing some technical difficulties. Please try again in a moment."
+  }
+}
+
 export function ChatBot() {
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>([
@@ -43,7 +111,7 @@ export function ChatBot() {
       id: "1",
       role: "assistant",
       content:
-        "Hi! I'm your inventory assistant. Ask me about products, sales, stock levels, or any insights from your data. I can also generate quick reports for you!",
+        "Hi! I'm your AI-powered inventory assistant. Ask me anything about your products, sales, stock levels, or get insights from your data. I can analyze trends, suggest reorder points, and help you make better business decisions!",
       timestamp: new Date(),
     },
   ])
@@ -151,48 +219,57 @@ export function ChatBot() {
     }
   }
 
-  const handleSend = () => {
-    if (!input.trim()) return
+  const handleSend = async () => {
+    if (!input.trim() || isLoading) return
+
     const userMessage: Message = {
       id: Date.now().toString(),
       role: "user",
       content: input,
       timestamp: new Date(),
     }
+
     setMessages((prev) => [...prev, userMessage])
     setInput("")
     setIsLoading(true)
 
-    setTimeout(() => {
+    try {
       const lowerInput = input.toLowerCase()
+
       let response = ""
-      if (lowerInput.includes("inventory") || lowerInput.includes("stock"))
+
+      if (lowerInput.includes("inventory") || lowerInput.includes("stock")) {
         response = generateInsight("inventory")
-      else if (
+      } else if (
         lowerInput.includes("sales") ||
         lowerInput.includes("revenue") ||
-        lowerInput.includes("money")
-      )
+        lowerInput.includes("money") ||
+        lowerInput.includes("transactions")
+      ) {
         response = generateInsight("sales")
-      else if (lowerInput.includes("product") || lowerInput.includes("top"))
+      } else if (lowerInput.includes("product") || lowerInput.includes("top")) {
         response = generateInsight("products")
-      else if (
+      } else if (
         lowerInput.includes("alert") ||
         lowerInput.includes("low") ||
         lowerInput.includes("expir")
-      )
+      ) {
         response = generateInsight("alerts")
-      else if (
+      } else if (
         lowerInput.includes("summary") ||
         lowerInput.includes("overview") ||
         lowerInput.includes("dashboard")
-      )
+      ) {
         response = generateInsight("summary")
-      else if (lowerInput.includes("supplier"))
+      } else if (lowerInput.includes("supplier")) {
         response = `🏢 **Suppliers**\n\nYou have ${suppliers?.length || 0} supplier(s).`
-      else
-        response =
-          "I can help you with inventory, sales, products, alerts, or summary. What would you like to know?"
+      } else {
+        response = await generateAIResponse(input, {
+          products: products || [],
+          transactions: transactions || [],
+          suppliers: suppliers || [],
+        })
+      }
 
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -201,8 +278,18 @@ export function ChatBot() {
         timestamp: new Date(),
       }
       setMessages((prev) => [...prev, assistantMessage])
+    } catch (error) {
+      console.error("Chat error:", error)
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: "assistant",
+        content: "I apologize, but I encountered an error. Please try again.",
+        timestamp: new Date(),
+      }
+      setMessages((prev) => [...prev, errorMessage])
+    } finally {
       setIsLoading(false)
-    }, 800)
+    }
   }
 
   const handleQuickInsight = (type: InsightType) => {
@@ -222,24 +309,24 @@ export function ChatBot() {
     setMessages((prev) => [...prev, userMessage, assistantMessage])
   }
 
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      setIsDragging(true)
-      dragOffset.current = {
-        x: e.clientX - position.x,
-        y: e.clientY - position.y,
-      }
-    },
-    [position]
-  )
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    setIsDragging(true)
+    dragOffset.current = {
+      x: e.clientX,
+      y: e.clientY,
+    }
+  }, [])
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
       if (isDragging) {
-        setPosition({
-          x: e.clientX - dragOffset.current.x,
-          y: e.clientY - dragOffset.current.y,
-        })
+        const deltaX = dragOffset.current.x - e.clientX
+        const deltaY = dragOffset.current.y - e.clientY
+        setPosition((prev) => ({
+          x: prev.x + deltaX,
+          y: prev.y + deltaY,
+        }))
+        dragOffset.current = { x: e.clientX, y: e.clientY }
       }
     },
     [isDragging]
@@ -275,12 +362,7 @@ export function ChatBot() {
           onMouseDown={handleMouseDown}
           className="h-14 w-14 rounded-full bg-primary shadow-lg transition-all duration-300 hover:scale-105 hover:bg-primary/90"
         >
-          <div className="relative">
-            <MessageCircle className="h-6 w-6 text-primary-foreground" />
-            <span className="absolute -top-1 -right-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full bg-green-500 text-xs font-medium text-white">
-              AI
-            </span>
-          </div>
+          <MessageCircle className="h-6 w-6 text-primary-foreground" />
           <GripVertical className="absolute top-1 left-1 h-3 w-3 text-white/50 opacity-0 hover:opacity-100" />
         </Button>
       </div>
@@ -290,7 +372,7 @@ export function ChatBot() {
           className="fixed flex h-[500px] w-96 animate-in flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-2xl duration-300 fade-in slide-in-from-bottom-4"
           style={{
             right: `calc(24px + ${position.x}px)`,
-            bottom: `calc(90px + ${position.y}px)`,
+            bottom: `calc(50px + ${position.y}px)`,
             zIndex: 10000,
           }}
         >
@@ -301,9 +383,9 @@ export function ChatBot() {
               </div>
               <div>
                 <h3 className="text-sm font-semibold text-white">
-                  Inventory Assistant
+                  AI Inventory Assistant
                 </h3>
-                <p className="text-xs text-white/70">AI-powered insights</p>
+                <p className="text-xs text-white/70">Powered by Gemini AI</p>
               </div>
             </div>
             <button

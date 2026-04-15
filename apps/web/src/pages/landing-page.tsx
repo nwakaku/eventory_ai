@@ -1,5 +1,10 @@
+import { useEffect } from "react"
+import AOS from "aos"
 import { Button } from "@workspace/ui/components/button"
-import { LandingLayout } from "@/components/layout/landing-layout"
+import {
+  LandingLayout,
+  openAuthModal,
+} from "@/components/layout/landing-layout"
 import {
   ShoppingCart,
   TrendingUp,
@@ -60,11 +65,11 @@ function FeatureItem({
 
 function IntegrationLogo({ name, logo }: { name: string; logo: string }) {
   return (
-    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-card p-1.5 shadow-sm sm:h-14 sm:w-14 sm:p-2 md:h-16 md:w-16">
+    <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-card p-1.5 shadow-sm sm:h-14 sm:w-14 sm:p-2 md:h-16 md:w-16">
       <img
         src={logo}
         alt={name}
-        className="max-h-full max-w-full object-contain"
+        className="max-h-full max-w-full rounded-full object-contain"
       />
     </div>
   )
@@ -99,6 +104,15 @@ function FeatureCard({
 }
 
 export function LandingPage({ onLogin }: { onLogin?: () => void }) {
+  useEffect(() => {
+    AOS.init({
+      duration: 600,
+      easing: "ease-out",
+      once: true,
+      offset: 50,
+    })
+  }, [])
+
   return (
     <LandingLayout onLoginSuccess={onLogin}>
       <section
@@ -111,18 +125,30 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
 
         <div className="relative z-10 mx-auto max-w-6xl px-4 py-16 sm:py-20 md:py-32">
           <div className="text-center">
-            <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl md:text-5xl lg:text-6xl">
+            <h1
+              data-aos="fade-up"
+              data-aos-delay="0"
+              className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl md:text-5xl lg:text-6xl"
+            >
               Simplify your inventory
               <br className="hidden sm:block" />
               and scale your business
             </h1>
-            <p className="mx-auto mt-4 max-w-xl px-2 text-base text-muted-foreground sm:mt-6 sm:max-w-2xl sm:text-lg md:text-xl">
+            <p
+              data-aos="fade-up"
+              data-aos-delay="100"
+              className="mx-auto mt-4 max-w-xl px-2 text-base text-muted-foreground sm:mt-6 sm:max-w-2xl sm:text-lg md:text-xl"
+            >
               Stop wrestling with spreadsheets and overpriced ERPs. Get
               real-time visibility of your stock, orders, and production in one
               intuitive platform.
             </p>
 
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:mt-10 sm:flex-row sm:gap-4">
+            <div
+              data-aos="fade-up"
+              data-aos-delay="200"
+              className="mt-8 flex flex-col items-center justify-center gap-3 sm:mt-10 sm:flex-row sm:gap-4"
+            >
               <Button
                 variant="outline"
                 size="lg"
@@ -133,14 +159,18 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
               <Button
                 size="lg"
                 className="h-11 w-full gap-2 px-6 text-sm font-medium sm:h-12 sm:w-auto sm:px-8 sm:text-base"
-                onClick={onLogin}
+                onClick={openAuthModal}
               >
                 Get started free
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </div>
 
-            <div className="mt-10 px-2 sm:mt-16">
+            <div
+              data-aos="fade-up"
+              data-aos-delay="300"
+              className="mt-10 px-2 sm:mt-16"
+            >
               <DashboardMockup variant="dark" />
             </div>
           </div>
@@ -153,7 +183,11 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
       >
         <div className="mx-auto max-w-6xl">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-6">
-            <div className="rounded-xl border border-border bg-card p-6 text-center shadow-sm sm:p-8">
+            <div
+              data-aos="fade-up"
+              data-aos-delay="0"
+              className="rounded-xl border border-border bg-card p-6 text-center shadow-sm sm:p-8"
+            >
               <div className="text-4xl font-bold text-primary sm:text-5xl md:text-6xl">
                 60%
               </div>
@@ -161,7 +195,11 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
                 Higher return on average per order, per year
               </div>
             </div>
-            <div className="rounded-xl border border-border bg-card p-6 text-center shadow-sm sm:p-8">
+            <div
+              data-aos="fade-up"
+              data-aos-delay="100"
+              className="rounded-xl border border-border bg-card p-6 text-center shadow-sm sm:p-8"
+            >
               <div className="text-4xl font-bold text-primary sm:text-5xl md:text-6xl">
                 1.2x
               </div>
@@ -169,7 +207,11 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
                 Faster time-to-market
               </div>
             </div>
-            <div className="rounded-xl border border-border bg-card p-6 text-center shadow-sm sm:p-8">
+            <div
+              data-aos="fade-up"
+              data-aos-delay="200"
+              className="rounded-xl border border-border bg-card p-6 text-center shadow-sm sm:p-8"
+            >
               <div className="text-4xl font-bold text-primary sm:text-5xl md:text-6xl">
                 6 weeks
               </div>
@@ -187,10 +229,17 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
       >
         <div className="mx-auto max-w-6xl">
           <div className="mb-8 text-center sm:mb-12">
-            <h2 className="text-2xl font-semibold text-foreground sm:text-3xl md:text-4xl">
+            <h2
+              data-aos="fade-up"
+              className="text-2xl font-semibold text-foreground sm:text-3xl md:text-4xl"
+            >
               Getting your products to customers faster
             </h2>
-            <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground sm:mt-4 sm:max-w-2xl sm:text-lg">
+            <p
+              data-aos="fade-up"
+              data-aos-delay="100"
+              className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground sm:mt-4 sm:max-w-2xl sm:text-lg"
+            >
               Managing orders across all channels has never been easier. From
               order creation to fulfillment, keep everything in sync.
             </p>
@@ -199,30 +248,42 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
           <div className="grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
             <div className="order-2 lg:order-1">
               <div className="space-y-6 sm:space-y-8">
-                <FeatureItem
-                  icon={TrendingUp}
-                  title="Real-time inventory tracking"
-                  description="Monitor stock levels across multiple locations. Get instant alerts when items run low and auto-reorder to prevent stockouts."
-                />
-                <FeatureItem
-                  icon={ShoppingCart}
-                  title="Seamless order management"
-                  description="Process orders from multiple channels in one place. Sync inventory automatically and fulfill orders faster."
-                />
-                <FeatureItem
-                  icon={Warehouse}
-                  title="Multi-location support"
-                  description="Manage inventory across warehouses, stores, and third-party logistics. Transfer stock between locations with a few clicks."
-                />
-                <FeatureItem
-                  icon={Settings}
-                  title="Production planning"
-                  description="Track manufacturing processes from raw materials to finished goods. Optimize production schedules and reduce waste."
-                />
+                <div data-aos="fade-right" data-aos-delay="0">
+                  <FeatureItem
+                    icon={TrendingUp}
+                    title="Real-time inventory tracking"
+                    description="Monitor stock levels across multiple locations. Get instant alerts when items run low and auto-reorder to prevent stockouts."
+                  />
+                </div>
+                <div data-aos="fade-right" data-aos-delay="100">
+                  <FeatureItem
+                    icon={ShoppingCart}
+                    title="Seamless order management"
+                    description="Process orders from multiple channels in one place. Sync inventory automatically and fulfill orders faster."
+                  />
+                </div>
+                <div data-aos="fade-right" data-aos-delay="200">
+                  <FeatureItem
+                    icon={Warehouse}
+                    title="Multi-location support"
+                    description="Manage inventory across warehouses, stores, and third-party logistics. Transfer stock between locations with a few clicks."
+                  />
+                </div>
+                <div data-aos="fade-right" data-aos-delay="300">
+                  <FeatureItem
+                    icon={Settings}
+                    title="Production planning"
+                    description="Track manufacturing processes from raw materials to finished goods. Optimize production schedules and reduce waste."
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="order-1 lg:order-2">
+            <div
+              data-aos="fade-left"
+              data-aos-delay="100"
+              className="order-1 lg:order-2"
+            >
               <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-xl">
                 <div className="border-b border-border bg-muted/50 p-3 sm:p-4">
                   <div className="flex items-center gap-3">
@@ -278,10 +339,17 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
         className="bg-secondary px-4 py-12 sm:px-6 sm:py-16 md:py-24"
       >
         <div className="mx-auto max-w-6xl text-center">
-          <h2 className="text-2xl font-semibold text-foreground sm:text-3xl md:text-4xl">
+          <h2
+            data-aos="fade-up"
+            className="text-2xl font-semibold text-foreground sm:text-3xl md:text-4xl"
+          >
             Integrate your tools and streamline your workflows
           </h2>
-          <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground sm:mt-4 sm:max-w-2xl sm:text-lg">
+          <p
+            data-aos="fade-up"
+            data-aos-delay="100"
+            className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground sm:mt-4 sm:max-w-2xl sm:text-lg"
+          >
             Connect Enventory with the tools you already use. Sync data
             automatically and eliminate manual entry.
           </p>
@@ -316,13 +384,17 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
                 name: "Xero",
                 logo: "https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1776091330/xero-accounting_udxwkq.png",
               },
-            ].map(({ name, logo }) => (
-              <IntegrationLogo key={name} name={name} logo={logo} />
+            ].map(({ name, logo }, i) => (
+              <div key={name} data-aos="fade-up" data-aos-delay={200 + i * 50}>
+                <IntegrationLogo name={name} logo={logo} />
+              </div>
             ))}
           </div>
 
           <a
             href="#"
+            data-aos="fade-up"
+            data-aos-delay="600"
             className="mt-6 inline-flex items-center gap-1 text-sm text-primary hover:underline sm:mt-8 sm:text-base"
           >
             See all integrations
@@ -337,7 +409,10 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
       >
         <div className="mx-auto max-w-6xl">
           <div className="mb-8 text-center sm:mb-12">
-            <h2 className="text-2xl font-semibold text-foreground sm:text-3xl md:text-4xl">
+            <h2
+              data-aos="fade-up"
+              className="text-2xl font-semibold text-foreground sm:text-3xl md:text-4xl"
+            >
               Get the inventory visibility you need
               <br className="hidden sm:block" />
               <span className="hidden sm:inline"> </span>
@@ -346,21 +421,27 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
           </div>
 
           <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
-            <FeatureCard
-              image="https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1776097589/track-inventory_csbdb9.webp"
-              title="Trace every batch and every lot"
-              description="Complete traceability from raw materials to finished goods. Meet compliance requirements with detailed audit trails."
-            />
-            <FeatureCard
-              image="https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1776097605/manufacturing-control_ezlvr4.webp"
-              title="Track production as it happens"
-              description="Real-time production monitoring with instant feedback. Identify bottlenecks and optimize workflows on the fly."
-            />
-            <FeatureCard
-              image="https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1776097640/omnichannel-sales_koqhhb.webp"
-              title="Sync sales across every channel"
-              description="Unified inventory across all your sales channels. Prevent overselling with real-time stock updates everywhere."
-            />
+            <div data-aos="fade-up" data-aos-delay="0">
+              <FeatureCard
+                image="https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1776097589/track-inventory_csbdb9.webp"
+                title="Trace every batch and every lot"
+                description="Complete traceability from raw materials to finished goods. Meet compliance requirements with detailed audit trails."
+              />
+            </div>
+            <div data-aos="fade-up" data-aos-delay="100">
+              <FeatureCard
+                image="https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1776097605/manufacturing-control_ezlvr4.webp"
+                title="Track production as it happens"
+                description="Real-time production monitoring with instant feedback. Identify bottlenecks and optimize workflows on the fly."
+              />
+            </div>
+            <div data-aos="fade-up" data-aos-delay="200">
+              <FeatureCard
+                image="https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1776097640/omnichannel-sales_koqhhb.webp"
+                title="Sync sales across every channel"
+                description="Unified inventory across all your sales channels. Prevent overselling with real-time stock updates everywhere."
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -371,7 +452,10 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
       >
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-6 sm:gap-8 lg:grid-cols-2">
-            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6 md:p-8">
+            <div
+              data-aos="fade-right"
+              className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6 md:p-8"
+            >
               <h3 className="text-lg font-semibold text-card-foreground sm:text-xl md:text-2xl">
                 Personalized implementation
               </h3>
@@ -379,7 +463,7 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
                 Get up and running quickly with our guided onboarding process
               </p>
 
-              <div className="mt-6 space-y-3 sm:mt-8 sm:space-y-4">
+              <div className="mt-6 space-y-3 sm:mt-8 sm:space-y-6">
                 {[
                   "Kickoff call with your dedicated onboarding specialist",
                   "Data migration from your existing systems",
@@ -407,7 +491,10 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
               </a>
             </div>
 
-            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6 md:p-8">
+            <div
+              data-aos="fade-left"
+              className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6 md:p-8"
+            >
               <h3 className="text-lg font-semibold text-card-foreground sm:text-xl md:text-2xl">
                 Continued success
               </h3>
@@ -415,7 +502,7 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
                 Ongoing support to help you grow and optimize
               </p>
 
-              <div className="mt-6 space-y-3 sm:mt-8 sm:space-y-4">
+              <div className="mt-8 space-y-6 sm:mt-8 sm:space-y-6">
                 {[
                   "24/7 customer support via chat and email",
                   "Regular product updates with new features",
@@ -424,7 +511,7 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
                   "Priority feature requests and feedback loop",
                 ].map((item) => (
                   <div key={item} className="flex items-start gap-3">
-                    <Check className="h-5 w-5 shrink-0 text-primary" />
+                    <Check className="h-5 w-5 shrink-0 rounded-full bg-orange-500 p-1" />
                     <span className="text-sm text-card-foreground sm:text-base">
                       {item}
                     </span>
@@ -449,10 +536,13 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
         className="bg-background px-4 py-12 sm:px-6 sm:py-16 md:py-24"
       >
         <div className="mx-auto max-w-4xl">
-          <div className="rounded-2xl border border-border bg-card p-6 shadow-lg sm:p-8 md:p-12">
+          <div
+            data-aos="fade-up"
+            className="rounded-2xl border border-border bg-card p-6 shadow-lg sm:p-8 md:p-12"
+          >
             <div className="mb-4 text-center sm:mb-6">
               <span className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
-                Social Proof
+                Testimonials
               </span>
             </div>
 
@@ -464,13 +554,11 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
             </blockquote>
 
             <div className="mt-6 flex flex-col items-center sm:mt-8">
-              <div className="h-14 w-14 overflow-hidden rounded-full bg-muted sm:h-16 sm:w-16">
-                <div className="flex h-full w-full items-center justify-center bg-primary/20">
-                  <span className="text-base font-semibold text-primary sm:text-lg">
-                    MJ
-                  </span>
-                </div>
-              </div>
+              <img
+                src="https://i.pravatar.cc/300?img=33"
+                alt="Michael Johnson"
+                className="h-14 w-14 rounded-full object-cover sm:h-16 sm:w-16"
+              />
               <div className="mt-3 text-center sm:mt-4">
                 <div className="font-semibold text-card-foreground">
                   Michael Johnson
