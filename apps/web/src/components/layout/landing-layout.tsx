@@ -2,6 +2,7 @@ import { useState } from "react"
 import { LandingNavbar } from "./landing-navbar"
 import { LandingFooter } from "./landing-footer"
 import { LoginModal } from "@/components/login-modal"
+import { ChatBot } from "@/components/chatbot"
 
 interface LandingLayoutProps {
   children: React.ReactNode
@@ -29,6 +30,7 @@ export function LandingLayout({
         onClose={() => setShowModal(false)}
         onSuccess={handleModalSuccess}
       />
+      <ChatBot />
     </div>
   )
 }

@@ -5,4 +5,5 @@ export const QUERY_KEYS = {
   PRODUCTION_ORDERS: "productionOrders",
   SALES_ORDERS: "salesOrders",
   PURCHASE_ORDERS: "purchaseOrders",
+  TRANSACTIONS: "transactions",
 }

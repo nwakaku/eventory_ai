@@ -1,5 +1,14 @@
 import { useState } from "react"
-import { Plus, Mail, Phone, Clock, Package, Pencil, Trash2 } from "lucide-react"
+import {
+  Plus,
+  Mail,
+  Phone,
+  Clock,
+  Package,
+  Pencil,
+  Trash2,
+  Loader2,
+} from "lucide-react"
 import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
 import { Label } from "@workspace/ui/components/label"
@@ -22,141 +31,86 @@ import {
   AlertDialogTitle,
 } from "@workspace/ui/components/alert-dialog"
 import { toast } from "@/components/toaster"
+import {
+  useGetAllSuppliers,
+  useCreateSupplier,
+  useUpdateSupplier,
+  useDeleteSupplier,
+} from "@/hooks/useSuppliers"
 
-type Supplier = {
-  id: number
+type SupplierFormData = {
   name: string
-  contactName: string
   email: string
   phone: string
-  leadTimeDays: number
-  linkedProducts: string[]
+  lead_time_days: number
 }
 
-const initialSuppliers: Supplier[] = [
-  {
-    id: 1,
-    name: "Steel Co Ltd",
-    contactName: "James Wilson",
-    email: "james@steelco.com",
-    phone: "+1 555-0123",
-    leadTimeDays: 7,
-    linkedProducts: ["Industrial Pump A200", "Motor Unit M-100"],
-  },
-  {
-    id: 2,
-    name: "Aluminum Inc",
-    contactName: "Sarah Chen",
-    email: "sarah@aluminum.com",
-    phone: "+1 555-0124",
-    leadTimeDays: 5,
-    linkedProducts: ["Control Panel CP-7", "Valve Assembly V50"],
-  },
-  {
-    id: 3,
-    name: "Copper World",
-    contactName: "Mike Brown",
-    email: "mike@copperworld.com",
-    phone: "+1 555-0125",
-    leadTimeDays: 10,
-    linkedProducts: ["Sensor Array S-25"],
-  },
-  {
-    id: 4,
-    name: "Plastics Direct",
-    contactName: "Lisa Wang",
-    email: "lisa@plastics.com",
-    phone: "+1 555-0126",
-    leadTimeDays: 3,
-    linkedProducts: ["Valve Assembly V50"],
-  },
-  {
-    id: 5,
-    name: "Rubber Solutions",
-    contactName: "Tom Davis",
-    email: "tom@rubbersol.com",
-    phone: "+1 555-0127",
-    leadTimeDays: 4,
-    linkedProducts: ["Industrial Pump A200", "Valve Assembly V50"],
-  },
-]
-
 export function SuppliersPage() {
-  const [suppliers, setSuppliers] = useState<Supplier[]>(initialSuppliers)
+  const { data: suppliers, isLoading } = useGetAllSuppliers()
+  const createSupplier = useCreateSupplier()
+  const updateSupplier = useUpdateSupplier()
+  const deleteSupplier = useDeleteSupplier()
+
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
-  const [editingSupplier, setEditingSupplier] = useState<Supplier | null>(null)
-  const [deleteId, setDeleteId] = useState<number | null>(null)
-  const [formData, setFormData] = useState({
+  const [editingSupplier, setEditingSupplier] = useState<
+    (SupplierFormData & { id: string }) | null
+  >(null)
+  const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [formData, setFormData] = useState<SupplierFormData>({
     name: "",
-    contactName: "",
     email: "",
     phone: "",
-    leadTimeDays: 7,
+    lead_time_days: 7,
   })
 
   const resetForm = () => {
-    setFormData({
-      name: "",
-      contactName: "",
-      email: "",
-      phone: "",
-      leadTimeDays: 7,
-    })
+    setFormData({ name: "", email: "", phone: "", lead_time_days: 7 })
   }
 
-  const handleAddSupplier = () => {
-    const supplier: Supplier = {
-      id: Date.now(),
-      ...formData,
-      linkedProducts: [],
+  const handleAdd = async () => {
+    if (!formData.name || !formData.email) {
+      toast({ title: "Please fill required fields", type: "error" })
+      return
     }
-    setSuppliers([...suppliers, supplier])
-    toast({
-      title: "Supplier added",
-      description: `${formData.name} has been added.`,
-      type: "success",
-    })
-    setIsAddModalOpen(false)
-    resetForm()
+    try {
+      await createSupplier.mutateAsync(formData)
+      toast({ title: "Supplier added successfully", type: "success" })
+      setIsAddModalOpen(false)
+      resetForm()
+    } catch (error) {
+      toast({ title: "Failed to add supplier", type: "error" })
+    }
   }
 
-  const handleUpdateSupplier = () => {
+  const handleEdit = async () => {
     if (!editingSupplier) return
-    setSuppliers(
-      suppliers.map((s) =>
-        s.id === editingSupplier.id ? { ...s, ...formData } : s
-      )
-    )
-    toast({
-      title: "Supplier updated",
-      description: `${formData.name} has been updated.`,
-      type: "success",
-    })
-    setEditingSupplier(null)
-    resetForm()
+    try {
+      await updateSupplier.mutateAsync({ id: editingSupplier.id, ...formData })
+      toast({ title: "Supplier updated successfully", type: "success" })
+      setEditingSupplier(null)
+      resetForm()
+    } catch (error) {
+      toast({ title: "Failed to update supplier", type: "error" })
+    }
   }
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!deleteId) return
-    const supplier = suppliers.find((s) => s.id === deleteId)
-    setSuppliers(suppliers.filter((s) => s.id !== deleteId))
-    toast({
-      title: "Supplier deleted",
-      description: `${supplier?.name} has been deleted.`,
-      type: "info",
-    })
-    setDeleteId(null)
+    try {
+      await deleteSupplier.mutateAsync(deleteId)
+      toast({ title: "Supplier deleted successfully", type: "success" })
+      setDeleteId(null)
+    } catch (error) {
+      toast({ title: "Failed to delete supplier", type: "error" })
+    }
   }
 
-  const openEditModal = (supplier: Supplier) => {
-    setEditingSupplier(supplier)
-    setFormData({
-      name: supplier.name,
-      contactName: supplier.contactName,
-      email: supplier.email,
-      phone: supplier.phone,
-      leadTimeDays: supplier.leadTimeDays,
-    })
+  if (isLoading) {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    )
   }
 
   return (
@@ -164,284 +118,271 @@ export function SuppliersPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-foreground">Suppliers</h1>
-          <p className="text-muted-foreground">
-            Manage your supplier relationships
-          </p>
+          <p className="text-muted-foreground">Manage your product suppliers</p>
         </div>
-        <Button className="gap-2" onClick={() => setIsAddModalOpen(true)}>
+        <Button onClick={() => setIsAddModalOpen(true)} className="gap-2">
           <Plus className="h-4 w-4" />
           Add Supplier
         </Button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {suppliers.map((supplier) => (
-          <div
-            key={supplier.id}
-            className="group rounded-xl border border-border bg-card p-5 shadow-sm transition-all duration-200 hover:shadow-md"
-          >
-            <div className="mb-4 flex items-start justify-between">
-              <div>
-                <h3 className="font-semibold text-foreground">
-                  {supplier.name}
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  {supplier.contactName}
-                </p>
-              </div>
-              <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
-                <Button
-                  variant="ghost"
-                  size="icon-sm"
-                  onClick={() => openEditModal(supplier)}
-                >
-                  <Pencil className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon-sm"
-                  onClick={() => setDeleteId(supplier.id)}
-                >
-                  <Trash2 className="h-4 w-4 text-destructive" />
-                </Button>
-              </div>
+      <div className="grid gap-4 md:grid-cols-3">
+        <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+              <Package className="h-5 w-5 text-primary" />
             </div>
-
-            <div className="mb-4 space-y-2">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Mail className="h-4 w-4 shrink-0" />
-                <span className="truncate">{supplier.email}</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Phone className="h-4 w-4 shrink-0" />
-                <span>{supplier.phone}</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Clock className="h-4 w-4 shrink-0" />
-                <span>{supplier.leadTimeDays} days lead time</span>
-              </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Total Suppliers</p>
+              <p className="text-2xl font-semibold text-foreground">
+                {suppliers?.length || 0}
+              </p>
             </div>
-
-            {supplier.linkedProducts.length > 0 && (
-              <div className="border-t border-border pt-4">
-                <p className="mb-2 text-xs text-muted-foreground">Supplies:</p>
-                <div className="flex flex-wrap gap-1">
-                  {supplier.linkedProducts.map((product) => (
-                    <span
-                      key={product}
-                      className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary"
-                    >
-                      <Package className="h-3 w-3" />
-                      {product.split(" ")[0]}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
-        ))}
+        </div>
+      </div>
 
-        {suppliers.length === 0 && (
-          <div className="col-span-full flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-border p-12 text-center">
-            <div className="mb-4 rounded-full bg-muted p-4">
-              <Package className="h-8 w-8 text-muted-foreground" />
-            </div>
-            <h3 className="mb-2 font-semibold text-foreground">
-              No suppliers yet
-            </h3>
-            <p className="mb-4 text-sm text-muted-foreground">
-              Add your first supplier to get started.
-            </p>
-            <Button onClick={() => setIsAddModalOpen(true)} className="gap-2">
-              <Plus className="h-4 w-4" />
-              Add Supplier
-            </Button>
+      <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-border bg-muted/30">
+                <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                  Supplier
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                  Email
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                  Phone
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                  Lead Time
+                </th>
+                <th className="px-6 py-3 text-right text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {suppliers?.map((supplier) => (
+                <tr
+                  key={supplier.id}
+                  className="transition-colors hover:bg-muted/30"
+                >
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
+                        <Package className="h-4 w-4 text-primary" />
+                      </div>
+                      <span className="font-medium text-foreground">
+                        {supplier.name}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Mail className="h-4 w-4" />
+                      {supplier.email}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Phone className="h-4 w-4" />
+                      {supplier.phone || "-"}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Clock className="h-4 w-4" />
+                      {supplier.lead_time_days || 0} days
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => {
+                          setEditingSupplier({
+                            id: supplier.id,
+                            name: supplier.name,
+                            email: supplier.email,
+                            phone: supplier.phone || "",
+                            lead_time_days: supplier.lead_time_days || 7,
+                          })
+                        }}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setDeleteId(supplier.id)}
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {(!suppliers || suppliers.length === 0) && (
+          <div className="p-12 text-center text-muted-foreground">
+            No suppliers found. Add your first supplier.
           </div>
         )}
       </div>
 
+      {/* Add Modal */}
       <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add Supplier</DialogTitle>
-            <DialogDescription>
-              Enter the supplier details below.
-            </DialogDescription>
+            <DialogTitle>Add New Supplier</DialogTitle>
+            <DialogDescription>Enter supplier details below</DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="sup-name">Company Name</Label>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Name *</Label>
               <Input
-                id="sup-name"
+                id="name"
                 value={formData.name}
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
-                placeholder="Enter company name"
+                placeholder="Supplier name"
               />
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="contact">Contact Name</Label>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email *</Label>
               <Input
-                id="contact"
-                value={formData.contactName}
+                id="email"
+                type="email"
+                value={formData.email}
                 onChange={(e) =>
-                  setFormData({ ...formData, contactName: e.target.value })
+                  setFormData({ ...formData, email: e.target.value })
                 }
-                placeholder="Enter contact name"
+                placeholder="email@example.com"
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                  placeholder="email@example.com"
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="phone">Phone</Label>
-                <Input
-                  id="phone"
-                  value={formData.phone}
-                  onChange={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
-                  }
-                  placeholder="+1 555-0000"
-                />
-              </div>
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="lead-time">Lead Time (days)</Label>
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone</Label>
               <Input
-                id="lead-time"
+                id="phone"
+                value={formData.phone}
+                onChange={(e) =>
+                  setFormData({ ...formData, phone: e.target.value })
+                }
+                placeholder="08012345678"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="leadTime">Lead Time (days)</Label>
+              <Input
+                id="leadTime"
                 type="number"
-                value={formData.leadTimeDays}
+                value={formData.lead_time_days}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    leadTimeDays: Number(e.target.value),
+                    lead_time_days: parseInt(e.target.value) || 7,
                   })
                 }
               />
             </div>
           </div>
           <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setIsAddModalOpen(false)
-                resetForm()
-              }}
-            >
+            <Button variant="outline" onClick={() => setIsAddModalOpen(false)}>
               Cancel
             </Button>
-            <Button
-              onClick={handleAddSupplier}
-              disabled={!formData.name || !formData.email}
-            >
-              Add Supplier
+            <Button onClick={handleAdd} disabled={createSupplier.isPending}>
+              {createSupplier.isPending ? "Adding..." : "Add Supplier"}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
+      {/* Edit Modal */}
       <Dialog
         open={!!editingSupplier}
-        onOpenChange={() => {
-          setEditingSupplier(null)
-          resetForm()
-        }}
+        onOpenChange={() => setEditingSupplier(null)}
       >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit Supplier</DialogTitle>
-            <DialogDescription>Update the supplier details.</DialogDescription>
+            <DialogDescription>Update supplier details</DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="edit-name">Company Name</Label>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="edit-name">Name *</Label>
               <Input
                 id="edit-name"
-                value={formData.name}
+                value={editingSupplier?.name || ""}
                 onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
+                  setEditingSupplier({
+                    ...editingSupplier!,
+                    name: e.target.value,
+                  })
                 }
               />
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="edit-contact">Contact Name</Label>
+            <div className="space-y-2">
+              <Label htmlFor="edit-email">Email *</Label>
               <Input
-                id="edit-contact"
-                value={formData.contactName}
+                id="edit-email"
+                type="email"
+                value={editingSupplier?.email || ""}
                 onChange={(e) =>
-                  setFormData({ ...formData, contactName: e.target.value })
+                  setEditingSupplier({
+                    ...editingSupplier!,
+                    email: e.target.value,
+                  })
                 }
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="edit-email">Email</Label>
-                <Input
-                  id="edit-email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="edit-phone">Phone</Label>
-                <Input
-                  id="edit-phone"
-                  value={formData.phone}
-                  onChange={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
-                  }
-                />
-              </div>
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="edit-lead-time">Lead Time (days)</Label>
+            <div className="space-y-2">
+              <Label htmlFor="edit-phone">Phone</Label>
               <Input
-                id="edit-lead-time"
+                id="edit-phone"
+                value={editingSupplier?.phone || ""}
+                onChange={(e) =>
+                  setEditingSupplier({
+                    ...editingSupplier!,
+                    phone: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-leadTime">Lead Time (days)</Label>
+              <Input
+                id="edit-leadTime"
                 type="number"
-                value={formData.leadTimeDays}
+                value={editingSupplier?.lead_time_days || 7}
                 onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    leadTimeDays: Number(e.target.value),
+                  setEditingSupplier({
+                    ...editingSupplier!,
+                    lead_time_days: parseInt(e.target.value) || 7,
                   })
                 }
               />
             </div>
           </div>
           <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setEditingSupplier(null)
-                resetForm()
-              }}
-            >
+            <Button variant="outline" onClick={() => setEditingSupplier(null)}>
               Cancel
             </Button>
-            <Button
-              onClick={handleUpdateSupplier}
-              disabled={!formData.name || !formData.email}
-            >
-              Save Changes
+            <Button onClick={handleEdit} disabled={updateSupplier.isPending}>
+              {updateSupplier.isPending ? "Saving..." : "Save Changes"}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
+      {/* Delete Confirmation */}
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>

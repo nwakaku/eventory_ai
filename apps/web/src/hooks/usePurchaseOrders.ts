@@ -27,7 +27,12 @@ export const useCreatePurchaseOrder = () => {
     mutationFn: async (order: Record<string, unknown>) => {
       const { data, error } = await supabase
         .from("purchase_orders")
-        .insert(order)
+        .insert({
+          supplier_id: order.supplier_id,
+          product_id: order.product_id,
+          quantity: order.quantity,
+          status: "Pending",
+        })
         .select()
       if (error) handleError(error as Error)
       return data
@@ -41,7 +46,10 @@ export const useCreatePurchaseOrder = () => {
 export const useUpdatePurchaseOrder = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: async ({ id, ...order }: { id: string } & Record<string, unknown>) => {
+    mutationFn: async ({
+      id,
+      ...order
+    }: { id: string } & Record<string, unknown>) => {
       const { data, error } = await supabase
         .from("purchase_orders")
         .update(order)
@@ -60,7 +68,10 @@ export const useDeletePurchaseOrder = () => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("purchase_orders").delete().eq("id", id)
+      const { error } = await supabase
+        .from("purchase_orders")
+        .delete()
+        .eq("id", id)
       if (error) handleError(error as Error)
     },
     onSuccess: () => {

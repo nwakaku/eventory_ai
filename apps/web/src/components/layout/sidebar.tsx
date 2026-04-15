@@ -3,39 +3,40 @@ import { NavLink } from "react-router-dom"
 import {
   LayoutDashboard,
   Package,
-  Layers,
-  LayoutGrid,
-  Factory,
   ShoppingCart,
   Truck,
   Users,
   Settings,
   ChevronLeft,
-  Menu,
   X,
+  ClipboardList,
   BarChart3,
 } from "lucide-react"
 import { cn } from "@workspace/ui/lib/utils"
 
 const navItems = [
-  { name: "Dashboard", href: "/", icon: LayoutDashboard },
-  { name: "Products", href: "/products", icon: Package },
-  { name: "Raw Materials", href: "/raw-materials", icon: Layers },
-  { name: "Inventory", href: "/inventory", icon: LayoutGrid },
-  { name: "Production", href: "/production", icon: Factory },
-  { name: "Sales Orders", href: "/sales-orders", icon: ShoppingCart },
-  { name: "Purchase Orders", href: "/purchase-orders", icon: Truck },
-  { name: "Suppliers", href: "/suppliers", icon: Users },
-  { name: "Reports", href: "/reports", icon: BarChart3 },
+  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { name: "Products", href: "/dashboard/products", icon: Package },
+  { name: "Inventory", href: "/dashboard/inventory", icon: ClipboardList },
+  { name: "Sales Orders", href: "/dashboard/sales-orders", icon: ShoppingCart },
+  { name: "Purchase Orders", href: "/dashboard/purchase-orders", icon: Truck },
+  { name: "Suppliers", href: "/dashboard/suppliers", icon: Users },
+  { name: "Reports", href: "/dashboard/reports", icon: BarChart3 },
 ]
 
 interface SidebarProps {
   collapsed?: boolean
   onToggle?: () => void
+  mobileOpen?: boolean
+  onMobileClose?: () => void
 }
 
-export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
-  const [isMobileOpen, setIsMobileOpen] = useState(false)
+export function Sidebar({
+  collapsed = false,
+  onToggle,
+  mobileOpen = false,
+  onMobileClose,
+}: SidebarProps) {
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
@@ -48,12 +49,18 @@ export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
   }, [])
 
   useEffect(() => {
-    if (isMobileOpen) {
+    if (mobileOpen) {
       document.body.style.overflow = "hidden"
     } else {
       document.body.style.overflow = ""
     }
-  }, [isMobileOpen])
+  }, [mobileOpen])
+
+  const handleNavClick = () => {
+    if (isMobile && onMobileClose) {
+      onMobileClose()
+    }
+  }
 
   const sidebarContent = (
     <>
@@ -74,18 +81,18 @@ export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
           </div>
         )}
         {isMobile && (
-          <button onClick={() => setIsMobileOpen(false)} className="p-2">
+          <button onClick={onMobileClose} className="p-2">
             <X className="h-5 w-5" />
           </button>
         )}
       </div>
 
-      <nav className="flex-1 space-y-1 p-3">
+      <nav className="flex-1 space-y-1 overflow-y-auto p-3">
         {navItems.map((item) => (
           <NavLink
             key={item.href}
             to={item.href}
-            onClick={() => isMobile && setIsMobileOpen(false)}
+            onClick={handleNavClick}
             className={({ isActive }) =>
               cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
@@ -105,7 +112,7 @@ export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
       <div className="border-t border-sidebar-border p-3">
         <NavLink
           to="/settings"
-          onClick={() => isMobile && setIsMobileOpen(false)}
+          onClick={handleNavClick}
           className={({ isActive }) =>
             cn(
               "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
@@ -141,24 +148,17 @@ export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
   if (isMobile) {
     return (
       <>
-        <button
-          onClick={() => setIsMobileOpen(true)}
-          className="fixed top-4 left-4 z-50 flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-card shadow-sm md:hidden"
-        >
-          <Menu className="h-5 w-5" />
-        </button>
-
-        {isMobileOpen && (
+        {mobileOpen && (
           <div
             className="fixed inset-0 z-50 bg-black/50"
-            onClick={() => setIsMobileOpen(false)}
+            onClick={onMobileClose}
           />
         )}
 
         <aside
           className={cn(
-            "fixed top-0 bottom-0 left-0 z-50 flex w-64 flex-col border-r border-sidebar-border bg-sidebar transition-transform duration-300 md:hidden",
-            isMobileOpen ? "translate-x-0" : "-translate-x-full"
+            "fixed top-0 bottom-0 left-0 z-50 flex h-screen w-72 max-w-[85vw] flex-col border-r border-sidebar-border bg-sidebar transition-transform duration-300 md:hidden",
+            mobileOpen ? "translate-x-0" : "-translate-x-full"
           )}
         >
           {sidebarContent}
@@ -170,7 +170,7 @@ export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
   return (
     <aside
       className={cn(
-        "hidden flex-col border-r border-sidebar-border bg-sidebar transition-all duration-300 md:flex",
+        "fixed top-0 bottom-0 left-0 hidden h-screen flex-col border-r border-sidebar-border bg-sidebar transition-all duration-300 md:flex",
         collapsed ? "w-16" : "w-64"
       )}
     >
