@@ -1,13 +1,5 @@
-import { useState, useRef, useEffect, useCallback } from "react"
-import {
-  MessageCircle,
-  X,
-  Send,
-  Bot,
-  Sparkles,
-  Loader2,
-  GripVertical,
-} from "lucide-react"
+import { useState, useRef, useEffect } from "react"
+import { MessageCircle, X, Send, Bot, Sparkles, Loader2 } from "lucide-react"
 import { Button } from "@workspace/ui/components/button"
 import { useGetAllProducts } from "@/hooks/useProducts"
 import { useGetAllTransactions } from "@/hooks/useTransactions"
@@ -117,10 +109,7 @@ export function ChatBot() {
   ])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const [position, setPosition] = useState({ x: 0, y: 0 })
-  const [isDragging, setIsDragging] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const dragOffset = useRef({ x: 0, y: 0 })
 
   const { data: products } = useGetAllProducts()
   const { data: transactions } = useGetAllTransactions()
@@ -309,154 +298,106 @@ export function ChatBot() {
     setMessages((prev) => [...prev, userMessage, assistantMessage])
   }
 
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    setIsDragging(true)
-    dragOffset.current = {
-      x: e.clientX,
-      y: e.clientY,
-    }
-  }, [])
-
-  const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
-      if (isDragging) {
-        const deltaX = dragOffset.current.x - e.clientX
-        const deltaY = dragOffset.current.y - e.clientY
-        setPosition((prev) => ({
-          x: prev.x + deltaX,
-          y: prev.y + deltaY,
-        }))
-        dragOffset.current = { x: e.clientX, y: e.clientY }
-      }
-    },
-    [isDragging]
-  )
-
-  const handleMouseUp = useCallback(() => {
-    setIsDragging(false)
-  }, [])
-
-  useEffect(() => {
-    if (isDragging) {
-      window.addEventListener("mousemove", handleMouseMove)
-      window.addEventListener("mouseup", handleMouseUp)
-      return () => {
-        window.removeEventListener("mousemove", handleMouseMove)
-        window.removeEventListener("mouseup", handleMouseUp)
-      }
-    }
-  }, [isDragging, handleMouseMove, handleMouseUp])
-
   return (
     <>
-      <div
-        className={`fixed bottom-6 transition-all duration-200 ${isDragging ? "cursor-grabbing" : ""}`}
-        style={{
-          right: `${position.x}px`,
-          bottom: `${position.y}px`,
-          zIndex: 9999,
-        }}
-      >
+      <div className="fixed right-6 bottom-6 z-50">
         <Button
-          onClick={() => setIsOpen(true)}
-          onMouseDown={handleMouseDown}
-          className="h-14 w-14 rounded-full bg-primary shadow-lg transition-all duration-300 hover:scale-105 hover:bg-primary/90"
+          onClick={() => setIsOpen(!isOpen)}
+          className="h-12 w-12 rounded-full bg-primary shadow-lg transition-all duration-300 hover:scale-105 hover:bg-primary/90"
         >
-          <MessageCircle className="h-6 w-6 text-primary-foreground" />
-          <GripVertical className="absolute top-1 left-1 h-3 w-3 text-white/50 opacity-0 hover:opacity-100" />
+          <MessageCircle className="h-5 w-5 text-primary-foreground" />
         </Button>
       </div>
 
       {isOpen && (
-        <div
-          className="fixed flex h-[500px] w-96 animate-in flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-2xl duration-300 fade-in slide-in-from-bottom-4"
-          style={{
-            right: `calc(24px + ${position.x}px)`,
-            bottom: `calc(50px + ${position.y}px)`,
-            zIndex: 10000,
-          }}
-        >
-          <div className="flex items-center justify-between border-b border-border bg-gradient-to-r from-primary to-green-600 px-4 py-3">
-            <div className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
-                <Sparkles className="h-5 w-5 text-white" />
+        <>
+          <div
+            className="fixed inset-0 z-40"
+            onClick={() => setIsOpen(false)}
+          />
+          <div className="fixed right-6 bottom-20 z-50 flex h-[400px] w-80 animate-in flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-2xl duration-300 fade-in slide-in-from-bottom-4">
+            <div className="flex items-center justify-between border-b border-border bg-gradient-to-r from-primary to-green-600 px-4 py-3">
+              <div className="flex items-center gap-2">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
+                  <Sparkles className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold text-white">
+                    AI Inventory Assistant
+                  </h3>
+                  <p className="text-xs text-white/70">Powered by Gemini AI</p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-sm font-semibold text-white">
-                  AI Inventory Assistant
-                </h3>
-                <p className="text-xs text-white/70">Powered by Gemini AI</p>
-              </div>
-            </div>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="rounded-lg p-1.5 transition-colors hover:bg-white/20"
-            >
-              <X className="h-5 w-5 text-white" />
-            </button>
-          </div>
-
-          <div className="flex-1 space-y-4 overflow-y-auto p-4">
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+              <button
+                onClick={() => setIsOpen(false)}
+                className="rounded-lg p-1.5 transition-colors hover:bg-white/20"
               >
+                <X className="h-5 w-5 text-white" />
+              </button>
+            </div>
+
+            <div className="flex-1 space-y-4 overflow-y-auto p-4">
+              {messages.map((msg) => (
                 <div
-                  className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm ${msg.role === "user" ? "rounded-br-md bg-primary text-primary-foreground" : "rounded-bl-md bg-muted text-foreground"}`}
+                  key={msg.id}
+                  className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                 >
-                  {msg.role === "assistant" && (
-                    <Bot className="mr-2 inline-block h-4 w-4 text-primary" />
-                  )}
-                  <span className="whitespace-pre-wrap">{msg.content}</span>
+                  <div
+                    className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm ${msg.role === "user" ? "rounded-br-md bg-primary text-primary-foreground" : "rounded-bl-md bg-muted text-foreground"}`}
+                  >
+                    {msg.role === "assistant" && (
+                      <Bot className="mr-2 inline-block h-4 w-4 text-primary" />
+                    )}
+                    <span className="whitespace-pre-wrap">{msg.content}</span>
+                  </div>
                 </div>
-              </div>
-            ))}
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="rounded-2xl rounded-bl-md bg-muted px-4 py-2.5">
-                  <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                </div>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
-
-          <div className="border-t border-border bg-muted/30 px-3 py-2">
-            <div className="mb-2 flex flex-wrap gap-1.5">
-              {quickInsights.map((insight) => (
-                <button
-                  key={insight.type}
-                  onClick={() => handleQuickInsight(insight.type)}
-                  className="rounded-full bg-primary/10 px-2.5 py-1 text-xs text-primary transition-colors hover:bg-primary/20"
-                >
-                  {insight.label}
-                </button>
               ))}
+              {isLoading && (
+                <div className="flex justify-start">
+                  <div className="rounded-2xl rounded-bl-md bg-muted px-4 py-2.5">
+                    <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                  </div>
+                </div>
+              )}
+              <div ref={messagesEndRef} />
             </div>
-          </div>
 
-          <div className="border-t border-border p-3">
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                placeholder="Ask about your inventory..."
-                className="h-10 flex-1 rounded-full border border-input bg-background px-4 text-sm placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
-              />
-              <Button
-                size="icon"
-                className="h-10 w-10 rounded-full"
-                onClick={handleSend}
-                disabled={!input.trim() || isLoading}
-              >
-                <Send className="h-4 w-4" />
-              </Button>
+            <div className="border-t border-border bg-muted/30 px-3 py-2">
+              <div className="mb-2 flex flex-wrap gap-1.5">
+                {quickInsights.map((insight) => (
+                  <button
+                    key={insight.type}
+                    onClick={() => handleQuickInsight(insight.type)}
+                    className="rounded-full bg-primary/10 px-2.5 py-1 text-xs text-primary transition-colors hover:bg-primary/20"
+                  >
+                    {insight.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="border-t border-border p-3">
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                  placeholder="Ask about your inventory..."
+                  className="h-10 flex-1 rounded-full border border-input bg-background px-4 text-sm placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+                />
+                <Button
+                  size="icon"
+                  className="h-10 w-10 rounded-full"
+                  onClick={handleSend}
+                  disabled={!input.trim() || isLoading}
+                >
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
+        </>
       )}
     </>
   )

@@ -47,7 +47,7 @@ export function Toaster() {
       {currentToasts.map((t) => (
         <div
           key={t.id}
-          className={`flex animate-in items-start gap-3 rounded-lg border p-4 shadow-lg slide-in-from-right ${
+          className={`flex animate-in items-start gap-3 rounded-lg border p-4 shadow-lg slide-in-from-bottom-4 ${
             t.type === "success"
               ? "border-[#00C853]/20 bg-[#00C853]/10"
               : t.type === "error"

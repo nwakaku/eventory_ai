@@ -152,7 +152,7 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
               <Button
                 variant="outline"
                 size="lg"
-                className="h-11 w-full px-6 text-sm font-medium sm:h-12 sm:w-auto sm:px-8 sm:text-base"
+                className="h-11 w-full px-6 text-sm font-medium sm:h-12 sm:w-auto sm:px-8 sm:text-base border-green-400 shadow-md"
               >
                 Book demo
               </Button>
@@ -248,28 +248,28 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
           <div className="grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
             <div className="order-2 lg:order-1">
               <div className="space-y-6 sm:space-y-8">
-                <div data-aos="fade-right" data-aos-delay="0">
+                <div data-aos="fade-up" data-aos-delay="0">
                   <FeatureItem
                     icon={TrendingUp}
                     title="Real-time inventory tracking"
                     description="Monitor stock levels across multiple locations. Get instant alerts when items run low and auto-reorder to prevent stockouts."
                   />
                 </div>
-                <div data-aos="fade-right" data-aos-delay="100">
+                <div data-aos="fade-up" data-aos-delay="100">
                   <FeatureItem
                     icon={ShoppingCart}
                     title="Seamless order management"
                     description="Process orders from multiple channels in one place. Sync inventory automatically and fulfill orders faster."
                   />
                 </div>
-                <div data-aos="fade-right" data-aos-delay="200">
+                <div data-aos="fade-up" data-aos-delay="200">
                   <FeatureItem
                     icon={Warehouse}
                     title="Multi-location support"
                     description="Manage inventory across warehouses, stores, and third-party logistics. Transfer stock between locations with a few clicks."
                   />
                 </div>
-                <div data-aos="fade-right" data-aos-delay="300">
+                <div data-aos="fade-up" data-aos-delay="300">
                   <FeatureItem
                     icon={Settings}
                     title="Production planning"
@@ -280,7 +280,7 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
             </div>
 
             <div
-              data-aos="fade-left"
+              data-aos="fade-up"
               data-aos-delay="100"
               className="order-1 lg:order-2"
             >
@@ -453,7 +453,7 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-6 sm:gap-8 lg:grid-cols-2">
             <div
-              data-aos="fade-right"
+              data-aos="fade-up"
               className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6 md:p-8"
             >
               <h3 className="text-lg font-semibold text-card-foreground sm:text-xl md:text-2xl">
@@ -492,7 +492,7 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
             </div>
 
             <div
-              data-aos="fade-left"
+              data-aos="fade-up"
               className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6 md:p-8"
             >
               <h3 className="text-lg font-semibold text-card-foreground sm:text-xl md:text-2xl">
