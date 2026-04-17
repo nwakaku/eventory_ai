@@ -34,25 +34,25 @@ export function LandingNavbar({ onLogin }: LandingNavbarProps) {
           <div className="hidden items-center gap-6 md:gap-8 lg:flex">
             <button
               onClick={() => scrollToSection("features")}
-              className="text-sm text-muted-foreground hover:text-foreground"
+              className="text-md text-muted-foreground hover:text-foreground"
             >
               Features
             </button>
             <button
               onClick={() => scrollToSection("integrations")}
-              className="text-sm text-muted-foreground hover:text-foreground"
+              className="text-md text-muted-foreground hover:text-foreground"
             >
               Integrations
             </button>
             <button
               onClick={() => scrollToSection("visibility")}
-              className="text-sm text-muted-foreground hover:text-foreground"
+              className="text-md text-muted-foreground hover:text-foreground"
             >
               Solutions
             </button>
             <button
               onClick={() => scrollToSection("support")}
-              className="text-sm text-muted-foreground hover:text-foreground"
+              className="text-md text-muted-foreground hover:text-foreground"
             >
               Support
             </button>
