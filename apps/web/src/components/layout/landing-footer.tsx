@@ -22,23 +22,6 @@ function YoutubeIcon({ className }: { className?: string }) {
   )
 }
 
-function FooterLink({
-  href,
-  children,
-}: {
-  href: string
-  children: React.ReactNode
-}) {
-  return (
-    <a
-      href={href}
-      className="text-sm text-gray-400 transition-colors hover:text-white"
-    >
-      {children}
-    </a>
-  )
-}
-
 export function LandingFooter() {
   return (
     <footer className="bg-[var(--footer-bg)] px-4 pt-12 pb-6 sm:px-6 sm:pt-16 sm:pb-8">
@@ -48,40 +31,14 @@ export function LandingFooter() {
             <div className="flex items-center gap-2">
               <img
                 src="https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1746566762/growth_ggcqxd.png"
-                alt="Enventory"
+                alt="Easivent"
                 className="h-9 w-9 object-contain sm:h-10 sm:w-10"
               />
               <span className="text-xl font-semibold text-white sm:text-2xl">
-                Enventory
+                Easivent
               </span>
             </div>
-            <p className="mt-3 max-w-xs text-sm text-gray-400 sm:mt-4">
-              Cloud inventory management for modern businesses. Track, manage,
-              and optimize your stock from anywhere.
-            </p>
-            <div className="mt-5 flex gap-3 sm:mt-6 sm:gap-4">
-              <a
-                href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-gray-400 transition-colors hover:bg-primary hover:text-white sm:h-10 sm:w-10"
-                aria-label="Twitter"
-              >
-                <TwitterIcon className="h-4 w-4 sm:h-5 sm:w-5" />
-              </a>
-              <a
-                href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-gray-400 transition-colors hover:bg-primary hover:text-white sm:h-10 sm:w-10"
-                aria-label="LinkedIn"
-              >
-                <LinkedinIcon className="h-4 w-4 sm:h-5 sm:w-5" />
-              </a>
-              <a
-                href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-gray-400 transition-colors hover:bg-primary hover:text-white sm:h-10 sm:w-10"
-                aria-label="YouTube"
-              >
-                <YoutubeIcon className="h-4 w-4 sm:h-5 sm:w-5" />
-              </a>
-            </div>
+            
           </div>
 
           <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 sm:gap-8 md:grid-cols-4 lg:grid-cols-5">
@@ -89,112 +46,33 @@ export function LandingFooter() {
               <h4 className="text-sm font-semibold text-white sm:text-base">
                 Product
               </h4>
-              <ul className="mt-3 space-y-2 sm:mt-4 sm:space-y-3">
-                <li>
-                  <FooterLink href="#">Features</FooterLink>
-                </li>
-                <li>
-                  <FooterLink href="#">Pricing</FooterLink>
-                </li>
-                <li>
-                  <FooterLink href="#">Integrations</FooterLink>
-                </li>
-                <li>
-                  <FooterLink href="#">Changelog</FooterLink>
-                </li>
-                <li>
-                  <FooterLink href="#">Roadmap</FooterLink>
-                </li>
-              </ul>
             </div>
             <div>
               <h4 className="text-sm font-semibold text-white sm:text-base">
                 Solutions
               </h4>
-              <ul className="mt-3 space-y-2 sm:mt-4 sm:space-y-3">
-                <li>
-                  <FooterLink href="#">Manufacturing</FooterLink>
-                </li>
-                <li>
-                  <FooterLink href="#">E-commerce</FooterLink>
-                </li>
-                <li>
-                  <FooterLink href="#">Wholesale</FooterLink>
-                </li>
-                <li>
-                  <FooterLink href="#">Retail</FooterLink>
-                </li>
-              </ul>
             </div>
             <div>
               <h4 className="text-sm font-semibold text-white sm:text-base">
                 Resources
               </h4>
-              <ul className="mt-3 space-y-2 sm:mt-4 sm:space-y-3">
-                <li>
-                  <FooterLink href="#">Documentation</FooterLink>
-                </li>
-                <li>
-                  <FooterLink href="#">API Reference</FooterLink>
-                </li>
-                <li>
-                  <FooterLink href="#">Blog</FooterLink>
-                </li>
-                <li>
-                  <FooterLink href="#">Webinars</FooterLink>
-                </li>
-                <li>
-                  <FooterLink href="#">Community</FooterLink>
-                </li>
-              </ul>
             </div>
             <div>
               <h4 className="text-sm font-semibold text-white sm:text-base">
                 Company
               </h4>
-              <ul className="mt-3 space-y-2 sm:mt-4 sm:space-y-3">
-                <li>
-                  <FooterLink href="#">About</FooterLink>
-                </li>
-                <li>
-                  <FooterLink href="#">Careers</FooterLink>
-                </li>
-                <li>
-                  <FooterLink href="#">Press</FooterLink>
-                </li>
-                <li>
-                  <FooterLink href="#">Contact</FooterLink>
-                </li>
-              </ul>
             </div>
             <div className="hidden md:block">
               <h4 className="text-sm font-semibold text-white sm:text-base">
                 Integrations
               </h4>
-              <ul className="mt-3 space-y-2 sm:mt-4 sm:space-y-3">
-                <li>
-                  <FooterLink href="#">Shopify</FooterLink>
-                </li>
-                <li>
-                  <FooterLink href="#">Xero</FooterLink>
-                </li>
-                <li>
-                  <FooterLink href="#">QuickBooks</FooterLink>
-                </li>
-                <li>
-                  <FooterLink href="#">Stripe</FooterLink>
-                </li>
-                <li>
-                  <FooterLink href="#">Slack</FooterLink>
-                </li>
-              </ul>
             </div>
           </div>
         </div>
 
         <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 sm:mt-12 sm:flex-row sm:pt-8">
           <div className="text-center text-sm text-gray-400 sm:text-left">
-            © 2026 Enventory. All rights reserved.
+            © 2026 Easivent. All rights reserved.
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1">

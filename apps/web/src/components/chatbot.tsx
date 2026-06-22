@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react"
-import { MessageCircle, X, Send, Bot, Sparkles, Loader2 } from "lucide-react"
+import { X, Send, Bot, Sparkles, Loader2 } from "lucide-react"
 import { Button } from "@workspace/ui/components/button"
 import { useGetAllProducts } from "@/hooks/useProducts"
 import { useGetAllTransactions } from "@/hooks/useTransactions"
@@ -29,7 +29,17 @@ const formatNGN = (amount: number): string => {
   return `₦${amount.toLocaleString("en-NG", { minimumFractionDigits: 0 })}`
 }
 
-const genAI = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY })
+function renderMessage(text: string) {
+  const parts = text.split(/(\*\*.*?\*\*)/)
+  return parts.map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={i}>{part.slice(2, -2)}</strong>
+    }
+    return part
+  })
+}
+
+const genAI = new GoogleGenAI({ apiKey: "AIzaSyArwFi-0aFC_QHyNckjMMlJ_ILiLnFltI0" })
 
 const generateAIResponse = async (
   userMessage: string,
@@ -61,7 +71,7 @@ const generateAIResponse = async (
     ? `Total suppliers: ${suppliers.length}`
     : "No suppliers data available"
 
-  const prompt = `You are an AI assistant for Enventory, an inventory management system.
+  const prompt = `You are an AI assistant for Easivent, an inventory management system.
 
 Current data context:
 - Products:\n${inventorySummary}
@@ -305,7 +315,11 @@ export function ChatBot() {
           onClick={() => setIsOpen(!isOpen)}
           className="h-12 w-12 rounded-full bg-primary shadow-lg transition-all duration-300 hover:scale-105 hover:bg-primary/90"
         >
-          <MessageCircle className="h-5 w-5 text-primary-foreground" />
+          <img
+            src="https://thumbs.dreamstime.com/b/virtual-assistant-portrait-happy-black-man-call-center-consulting-talking-customer-services-communication-friendly-smile-277939748.jpg"
+            alt="Chat"
+            className="h-6 w-6 rounded-full object-cover"
+          />
         </Button>
       </div>
 
@@ -348,7 +362,7 @@ export function ChatBot() {
                     {msg.role === "assistant" && (
                       <Bot className="mr-2 inline-block h-4 w-4 text-primary" />
                     )}
-                    <span className="whitespace-pre-wrap">{msg.content}</span>
+                    <span className="whitespace-pre-wrap">{renderMessage(msg.content)}</span>
                   </div>
                 </div>
               ))}

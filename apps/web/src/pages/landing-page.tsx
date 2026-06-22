@@ -1,10 +1,17 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import AOS from "aos"
 import { Button } from "@workspace/ui/components/button"
 import {
   LandingLayout,
   openAuthModal,
 } from "@/components/layout/landing-layout"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@workspace/ui/components/dialog"
 import {
   ShoppingCart,
   TrendingUp,
@@ -113,6 +120,9 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
     })
   }, [])
 
+  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false)
+  const [demoEmail, setDemoEmail] = useState("")
+
   return (
     <LandingLayout onLoginSuccess={onLogin}>
       <section
@@ -130,7 +140,7 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
               data-aos-delay="0"
               className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl md:text-5xl lg:text-6xl"
             >
-              Simplify your inventory
+              AI Inventory to simplify
               <br className="hidden sm:block" />
               and scale your business
             </h1>
@@ -139,7 +149,7 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
               data-aos-delay="100"
               className="mx-auto mt-4 max-w-xl px-2 text-base text-muted-foreground sm:mt-6 sm:max-w-2xl sm:text-lg md:text-xl"
             >
-              Stop wrestling with spreadsheets and overpriced ERPs. Get
+              Automate your business numbers. Get
               real-time visibility of your stock, orders, and production in one
               intuitive platform.
             </p>
@@ -153,6 +163,7 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
                 variant="outline"
                 size="lg"
                 className="h-11 w-full px-6 text-sm font-medium sm:h-12 sm:w-auto sm:px-8 sm:text-base border-green-400 shadow-md"
+                onClick={() => setIsDemoModalOpen(true)}
               >
                 Book demo
               </Button>
@@ -233,7 +244,7 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
               data-aos="fade-up"
               className="text-2xl font-semibold text-foreground sm:text-3xl md:text-4xl"
             >
-              Getting your products to customers faster
+              Tailored For Small Businesses To Manage Orders Faster
             </h2>
             <p
               data-aos="fade-up"
@@ -350,7 +361,7 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
             data-aos-delay="100"
             className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground sm:mt-4 sm:max-w-2xl sm:text-lg"
           >
-            Connect Enventory with the tools you already use. Sync data
+            Connect Easivent with the tools you already use. Sync data
             automatically and eliminate manual entry.
           </p>
 
@@ -423,14 +434,14 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
           <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
             <div data-aos="fade-up" data-aos-delay="0">
               <FeatureCard
-                image="https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1776097589/track-inventory_csbdb9.webp"
+                image="https://res.cloudinary.com/dgbreoalg/image/upload/v1753713150/113607ef0b9e55ccebb249cd5cdfabb3_jiulfd.jpg"
                 title="Trace every batch and every lot"
                 description="Complete traceability from raw materials to finished goods. Meet compliance requirements with detailed audit trails."
               />
             </div>
             <div data-aos="fade-up" data-aos-delay="100">
               <FeatureCard
-                image="https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1776097605/manufacturing-control_ezlvr4.webp"
+                image="https://res.cloudinary.com/dgbreoalg/image/upload/v1782160639/x9jB1_uswntj.jpg"
                 title="Track production as it happens"
                 description="Real-time production monitoring with instant feedback. Identify bottlenecks and optimize workflows on the fly."
               />
@@ -511,7 +522,7 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
                   "Priority feature requests and feedback loop",
                 ].map((item) => (
                   <div key={item} className="flex items-start gap-3">
-                    <Check className="h-5 w-5 shrink-0 rounded-full bg-orange-500 p-1" />
+                    <Check className="h-5 w-5 shrink-0 rounded-full bg-yellow-500 p-1" />
                     <span className="text-sm text-card-foreground sm:text-base">
                       {item}
                     </span>
@@ -547,7 +558,7 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
             </div>
 
             <blockquote className="px-2 text-center text-base font-medium text-card-foreground italic sm:text-xl md:text-2xl">
-              "Enventory completely transformed how we manage our inventory. We
+              "Easivent completely transformed how we manage our inventory. We
               went from spending hours on spreadsheets every week to having
               real-time visibility of our entire operation. The implementation
               was incredibly smooth, and the support team has been fantastic."
@@ -555,16 +566,16 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
 
             <div className="mt-6 flex flex-col items-center sm:mt-8">
               <img
-                src="https://i.pravatar.cc/300?img=33"
-                alt="Michael Johnson"
+                src="https://mockmind-api.uifaces.co/content/human/209.jpg"
+                alt="Evans Agunna"
                 className="h-14 w-14 rounded-full object-cover sm:h-16 sm:w-16"
               />
               <div className="mt-3 text-center sm:mt-4">
                 <div className="font-semibold text-card-foreground">
-                  Michael Johnson
+                  Evans Agunna
                 </div>
                 <div className="text-xs text-muted-foreground sm:text-sm">
-                  Operations Director, TechCraft Manufacturing
+                  Sales Director, Blessed Pharmacy
                 </div>
               </div>
               <div className="mt-2 flex gap-0.5">
@@ -579,6 +590,35 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
           </div>
         </div>
       </section>
+
+      <Dialog open={isDemoModalOpen} onOpenChange={setIsDemoModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Book a Demo</DialogTitle>
+            <DialogDescription>
+              Enter your email address and we'll reach out to schedule a demo.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col gap-4">
+            <input
+              type="email"
+              placeholder="you@company.com"
+              value={demoEmail}
+              onChange={(e) => setDemoEmail(e.target.value)}
+              className="h-10 rounded-lg border border-input bg-background px-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+            />
+            <Button
+              onClick={() => {
+                setIsDemoModalOpen(false)
+                setDemoEmail("")
+              }}
+              disabled={!demoEmail.includes("@")}
+            >
+              Submit
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </LandingLayout>
   )
 }

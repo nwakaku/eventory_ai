@@ -69,18 +69,18 @@ export function Sidebar({
           <div className="flex items-center gap-2">
             <img
               src="https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1746566762/growth_ggcqxd.png"
-              alt="Enventory"
+              alt="Easivent"
               className="h-8 w-8 object-contain"
             />
             <span className="font-semibold text-sidebar-foreground">
-              Enventory
+              Easivent
             </span>
           </div>
         )}
         {(collapsed || isMobile) && (
           <img
             src="https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1746566762/growth_ggcqxd.png"
-            alt="Enventory"
+            alt="Easivent"
             className="mx-auto h-8 w-8 object-contain"
           />
         )}
