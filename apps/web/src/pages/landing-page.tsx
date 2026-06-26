@@ -21,7 +21,17 @@ import {
   Star,
   Check,
   ArrowRight,
+  Quote,
 } from "lucide-react"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+  CarouselDots,
+} from "@workspace/ui/components/carousel"
+import { testimonials } from "@/data/testimonials"
 
 function DashboardMockup({ variant = "dark" }: { variant?: "dark" | "light" }) {
   const isDark = variant === "dark"
@@ -92,19 +102,19 @@ function FeatureCard({
   image: string
 }) {
   return (
-    <div className="group overflow-hidden rounded-2xl bg-card shadow-lg transition-shadow hover:shadow-xl">
-      <div className="aspect-[4/3] overflow-hidden">
+    <div className="group overflow-hidden rounded-2xl bg-card shadow-sm transition-shadow hover:shadow-xl">
+      <div className="aspect-[1/1] overflow-hidden">
         <img
           src={image}
           alt={title}
           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
       </div>
-      <div className="p-4 sm:p-6">
-        <h3 className="text-base font-semibold text-card-foreground sm:text-lg">
+      <div className="p-8 sm:p-10">
+        <h3 className="text-xl font-semibold text-card-foreground sm:text-2xl">
           {title}
         </h3>
-        <p className="mt-2 text-sm text-muted-foreground">{description}</p>
+        <p className="mt-3 text-base text-muted-foreground sm:text-lg">{description}</p>
       </div>
     </div>
   )
@@ -140,7 +150,7 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
               data-aos-delay="0"
               className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl md:text-5xl lg:text-6xl"
             >
-              AI Inventory to simplify
+              AI Inventory to simplify 
               <br className="hidden sm:block" />
               and scale your business
             </h1>
@@ -212,7 +222,7 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
               className="rounded-xl border border-border bg-card p-6 text-center shadow-sm sm:p-8"
             >
               <div className="text-4xl font-bold text-primary sm:text-5xl md:text-6xl">
-                1.2x
+                5x
               </div>
               <div className="mt-2 text-xs text-muted-foreground sm:mt-3 sm:text-sm">
                 Faster time-to-market
@@ -244,7 +254,7 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
               data-aos="fade-up"
               className="text-2xl font-semibold text-foreground sm:text-3xl md:text-4xl"
             >
-              Tailored For Small Businesses To Manage Orders Faster
+              Tailored For Small Businesses To Manage Orders Faster Without Stress
             </h2>
             <p
               data-aos="fade-up"
@@ -361,7 +371,7 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
             data-aos-delay="100"
             className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground sm:mt-4 sm:max-w-2xl sm:text-lg"
           >
-            Connect Easivent with the tools you already use. Sync data
+            Connect Easiventory with the tools you already use. Sync data
             automatically and eliminate manual entry.
           </p>
 
@@ -431,28 +441,54 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
-            <div data-aos="fade-up" data-aos-delay="0">
-              <FeatureCard
-                image="https://res.cloudinary.com/dgbreoalg/image/upload/v1753713150/113607ef0b9e55ccebb249cd5cdfabb3_jiulfd.jpg"
-                title="Trace every batch and every lot"
-                description="Complete traceability from raw materials to finished goods. Meet compliance requirements with detailed audit trails."
-              />
-            </div>
-            <div data-aos="fade-up" data-aos-delay="100">
-              <FeatureCard
-                image="https://res.cloudinary.com/dgbreoalg/image/upload/v1782160639/x9jB1_uswntj.jpg"
-                title="Track production as it happens"
-                description="Real-time production monitoring with instant feedback. Identify bottlenecks and optimize workflows on the fly."
-              />
-            </div>
-            <div data-aos="fade-up" data-aos-delay="200">
-              <FeatureCard
-                image="https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1776097640/omnichannel-sales_koqhhb.webp"
-                title="Sync sales across every channel"
-                description="Unified inventory across all your sales channels. Prevent overselling with real-time stock updates everywhere."
-              />
-            </div>
+          <div data-aos="fade-up">
+            <Carousel
+              opts={{
+                align: "start",
+                loop: true,
+                slidesToScroll: "auto",
+              }}
+              autoplay={{ delay: 4000, stopOnInteraction: false }}
+            >
+              <CarouselContent>
+                {[
+                  {
+                    image: "https://res.cloudinary.com/dgbreoalg/image/upload/v1753713150/113607ef0b9e55ccebb249cd5cdfabb3_jiulfd.jpg",
+                    title: "Trace every batch and every lot",
+                    description: "Complete traceability from raw materials to finished goods. Meet compliance requirements with detailed audit trails.",
+                  },
+                  {
+                    image: "https://res.cloudinary.com/dgbreoalg/image/upload/v1782160639/x9jB1_uswntj.jpg",
+                    title: "Track production as it happens",
+                    description: "Real-time production monitoring with instant feedback. Identify bottlenecks and optimize workflows.",
+                  },
+                  {
+                    image: "https://res.cloudinary.com/dgbreoalg/image/upload/v1782505772/UVYSb_ovbfnp.jpg",
+                    title: "Sync sales across every channel",
+                    description: "Unified inventory across all your sales channels. Prevent overselling with real-time stock updates everywhere.",
+                  },
+                  {
+                    image: "https://res.cloudinary.com/dgbreoalg/image/upload/v1782506291/ywzfc_tlaugj.jpg",
+                    title: "Built for pharmacy & supermarket",
+                    description: "Manage expiries, track batch lots, and handle regulated inventory. Purpose-built for health and retail businesses.",
+                  },
+                ].map((card, i) => (
+                  <CarouselItem
+                    key={i}
+                    className="basis-[30.77%] px-2"
+                  >
+                    <FeatureCard
+                      image={card.image}
+                      title={card.title}
+                      description={card.description}
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+              <CarouselDots className="mt-6" />
+            </Carousel>
           </div>
         </div>
       </section>
@@ -507,7 +543,7 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
               className="rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6 md:p-8"
             >
               <h3 className="text-lg font-semibold text-card-foreground sm:text-xl md:text-2xl">
-                Continued success
+                Benefits
               </h3>
               <p className="mt-2 text-sm text-muted-foreground sm:text-base">
                 Ongoing support to help you grow and optimize
@@ -546,47 +582,68 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
         id="testimonial"
         className="bg-background px-4 py-12 sm:px-6 sm:py-16 md:py-24"
       >
-        <div className="mx-auto max-w-4xl">
-          <div
-            data-aos="fade-up"
-            className="rounded-2xl border border-border bg-card p-6 shadow-lg sm:p-8 md:p-12"
-          >
-            <div className="mb-4 text-center sm:mb-6">
-              <span className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
-                Testimonials
-              </span>
-            </div>
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-10 text-center" data-aos="fade-up">
+            <span className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
+              Testimonials
+            </span>
+            <h2 className="mt-2 text-2xl font-semibold text-foreground sm:text-3xl">
+              Trusted by businesses like yours
+            </h2>
+          </div>
 
-            <blockquote className="px-2 text-center text-base font-medium text-card-foreground italic sm:text-xl md:text-2xl">
-              "Easivent completely transformed how we manage our inventory. We
-              went from spending hours on spreadsheets every week to having
-              real-time visibility of our entire operation. The implementation
-              was incredibly smooth, and the support team has been fantastic."
-            </blockquote>
-
-            <div className="mt-6 flex flex-col items-center sm:mt-8">
-              <img
-                src="https://mockmind-api.uifaces.co/content/human/209.jpg"
-                alt="Evans Agunna"
-                className="h-14 w-14 rounded-full object-cover sm:h-16 sm:w-16"
-              />
-              <div className="mt-3 text-center sm:mt-4">
-                <div className="font-semibold text-card-foreground">
-                  Evans Agunna
-                </div>
-                <div className="text-xs text-muted-foreground sm:text-sm">
-                  Sales Director, Blessed Pharmacy
-                </div>
-              </div>
-              <div className="mt-2 flex gap-0.5">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="h-3.5 w-3.5 fill-[#f59e0b] text-[#f59e0b] sm:h-4 sm:w-4"
-                  />
+          <div data-aos="fade-up" data-aos-delay="100">
+            <Carousel
+              opts={{
+                align: "start",
+                loop: true,
+                breakpoints: {
+                  "(min-width: 1024px)": { slidesToScroll: 1 },
+                  "(min-width: 768px)": { slidesToScroll: 1 },
+                },
+              }}
+              autoplay={{ delay: 4000, stopOnInteraction: false }}
+            >
+              <CarouselContent>
+                {testimonials.map((t) => (
+                  <CarouselItem
+                    key={t.id}
+                    className="md:basis-1/2 lg:basis-[28.57%] px-2"
+                  >
+                    <div className="flex h-full flex-col rounded-xl border border-border bg-card p-5 shadow-sm">
+                      <Quote className="mb-3 h-6 w-6 text-primary/40" />
+                      <blockquote className="flex-1 text-sm leading-relaxed text-card-foreground/80">
+                        &ldquo;{t.quote}&rdquo;
+                      </blockquote>
+                      <div className="mt-4 flex items-center gap-3 border-t border-border pt-4">
+                        <img
+                          src={t.avatar}
+                          alt={t.name}
+                          className="h-10 w-10 shrink-0 rounded-full object-cover"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <div className="truncate text-sm font-semibold text-card-foreground">
+                            {t.name}
+                          </div>
+                          <div className="truncate text-xs text-muted-foreground">
+                            {t.role}, {t.company}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mt-2 flex gap-0.5">
+                        {[...Array(t.rating)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className="h-3.5 w-3.5 fill-[#f59e0b] text-[#f59e0b]"
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </CarouselItem>
                 ))}
-              </div>
-            </div>
+              </CarouselContent>
+              <CarouselDots className="mt-6" />
+            </Carousel>
           </div>
         </div>
       </section>

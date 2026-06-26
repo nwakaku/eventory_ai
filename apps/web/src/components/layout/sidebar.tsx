@@ -69,18 +69,18 @@ export function Sidebar({
           <div className="flex items-center gap-2">
             <img
               src="https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1746566762/growth_ggcqxd.png"
-              alt="Easivent"
+              alt="Easiventory"
               className="h-8 w-8 object-contain"
             />
             <span className="font-semibold text-sidebar-foreground">
-              Easivent
+              Easiventory
             </span>
           </div>
         )}
         {(collapsed || isMobile) && (
           <img
             src="https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1746566762/growth_ggcqxd.png"
-            alt="Easivent"
+            alt="Easiventory"
             className="mx-auto h-8 w-8 object-contain"
           />
         )}
@@ -103,12 +103,12 @@ export function Sidebar({
                 isActive
                   ? "bg-sidebar-accent text-sidebar-accent-foreground"
                   : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground",
-                (collapsed || isMobile) && "justify-center px-2"
+                collapsed && "justify-center px-2"
               )
             }
           >
             <item.icon className="h-5 w-5 shrink-0" />
-            {!collapsed && !isMobile && <span>{item.name}</span>}
+            {!collapsed && <span>{item.name}</span>}
           </NavLink>
         ))}
       </nav>
@@ -123,12 +123,12 @@ export function Sidebar({
               isActive
                 ? "bg-sidebar-accent text-sidebar-accent-foreground"
                 : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground",
-              (collapsed || isMobile) && "justify-center px-2"
+              collapsed && "justify-center px-2"
             )
           }
         >
           <Settings className="h-5 w-5 shrink-0" />
-          {!collapsed && !isMobile && <span>Settings</span>}
+          {!collapsed && <span>Settings</span>}
         </NavLink>
 
         {!isMobile && (

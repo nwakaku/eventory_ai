@@ -71,7 +71,7 @@ const generateAIResponse = async (
     ? `Total suppliers: ${suppliers.length}`
     : "No suppliers data available"
 
-  const prompt = `You are an AI assistant for Easivent, an inventory management system.
+  const prompt = `You are an AI assistant for Easiventory, an inventory management system.
 
 Current data context:
 - Products:\n${inventorySummary}

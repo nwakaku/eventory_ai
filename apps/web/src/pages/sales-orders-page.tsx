@@ -129,7 +129,7 @@ export function SalesOrdersPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
           <h1 className="text-2xl font-semibold text-foreground">Sales Orders</h1>
           <p className="text-muted-foreground">Manage customer orders</p>
@@ -162,72 +162,127 @@ export function SalesOrdersPage() {
       </div>
 
       <Tabs value={statusFilter} onValueChange={setStatusFilter}>
-        <TabsList>
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="Pending">Pending</TabsTrigger>
-          <TabsTrigger value="Fulfilled">Fulfilled</TabsTrigger>
-          <TabsTrigger value="Archived">Archived</TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto">
+          <TabsList>
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="Pending">Pending</TabsTrigger>
+            <TabsTrigger value="Fulfilled">Fulfilled</TabsTrigger>
+            <TabsTrigger value="Archived">Archived</TabsTrigger>
+          </TabsList>
+        </div>
 
-        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm mt-4">
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-muted/50">
-                <TableHead>Customer</TableHead>
-                <TableHead>Product</TableHead>
-                <TableHead className="text-right">Qty</TableHead>
-                <TableHead className="text-right">Total</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="h-48 text-center">
-                    <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto" />
-                  </TableCell>
+        <div className="rounded-xl border border-border bg-card shadow-sm mt-4">
+          <div className="hidden overflow-x-auto sm:block">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-muted/50">
+                  <TableHead>Customer</TableHead>
+                  <TableHead>Product</TableHead>
+                  <TableHead className="text-right">Qty</TableHead>
+                  <TableHead className="text-right">Total</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
-              ) : filteredOrders.length > 0 ? filteredOrders.map((order) => (
-                <TableRow key={order.id}>
-                  <TableCell className="font-medium">{order.customer}</TableCell>
-                  <TableCell>{getProductName(order.product_id)}</TableCell>
-                  <TableCell className="text-right">{order.quantity}</TableCell>
-                  <TableCell className="text-right font-medium">${(order.total || 0).toFixed(2)}</TableCell>
-                  <TableCell>{getStatusBadge(order.status || "Pending")}</TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-1">
-                      {order.status === "Pending" && (
-                        <Button variant="ghost" size="icon-sm" onClick={() => handleFulfill(order)} title="Fulfill order">
-                          <Check className="h-4 w-4 text-[#00C853]" />
-                        </Button>
-                      )}
-                      {order.status === "Fulfilled" && (
-                        <Button variant="ghost" size="icon-sm" onClick={() => handleArchive(order.id)} title="Archive order">
-                          <Archive className="h-4 w-4 text-muted-foreground" />
-                        </Button>
-                      )}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              )) : (
-                <TableRow>
-                  <TableCell colSpan={6} className="h-48 text-center">
-                    <div className="flex flex-col items-center justify-center">
-                      <div className="rounded-full bg-muted p-4 mb-4">
-                        <ShoppingCart className="h-8 w-8 text-muted-foreground" />
+              </TableHeader>
+              <TableBody>
+                {isLoading ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="h-48 text-center">
+                      <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto" />
+                    </TableCell>
+                  </TableRow>
+                ) : filteredOrders.length > 0 ? filteredOrders.map((order) => (
+                  <TableRow key={order.id}>
+                    <TableCell className="font-medium">{order.customer}</TableCell>
+                    <TableCell>{getProductName(order.product_id)}</TableCell>
+                    <TableCell className="text-right">{order.quantity}</TableCell>
+                    <TableCell className="text-right font-medium">${(order.total || 0).toFixed(2)}</TableCell>
+                    <TableCell>{getStatusBadge(order.status || "Pending")}</TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        {order.status === "Pending" && (
+                          <Button variant="ghost" size="icon-sm" onClick={() => handleFulfill(order)} title="Fulfill order">
+                            <Check className="h-4 w-4 text-[#00C853]" />
+                          </Button>
+                        )}
+                        {order.status === "Fulfilled" && (
+                          <Button variant="ghost" size="icon-sm" onClick={() => handleArchive(order.id)} title="Archive order">
+                            <Archive className="h-4 w-4 text-muted-foreground" />
+                          </Button>
+                        )}
                       </div>
-                      <h3 className="font-semibold text-foreground mb-2">No orders yet</h3>
-                      <p className="text-sm text-muted-foreground mb-4">Create your first sales order.</p>
-                      <Button onClick={() => setShowAddModal(true)} className="gap-2">
-                        <Plus className="h-4 w-4" /> Create Order
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                    </TableCell>
+                  </TableRow>
+                )) : (
+                  <TableRow>
+                    <TableCell colSpan={6} className="h-48 text-center">
+                      <div className="flex flex-col items-center justify-center">
+                        <div className="rounded-full bg-muted p-4 mb-4">
+                          <ShoppingCart className="h-8 w-8 text-muted-foreground" />
+                        </div>
+                        <h3 className="font-semibold text-foreground mb-2">No orders yet</h3>
+                        <p className="text-sm text-muted-foreground mb-4">Create your first sales order.</p>
+                        <Button onClick={() => setShowAddModal(true)} className="gap-2">
+                          <Plus className="h-4 w-4" /> Create Order
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+
+          <div className="divide-y divide-border sm:hidden">
+            {isLoading ? (
+              <div className="flex items-center justify-center py-16">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            ) : filteredOrders.length > 0 ? filteredOrders.map((order) => (
+              <div key={order.id} className="p-4">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <p className="font-medium text-foreground">{order.customer}</p>
+                    <p className="text-sm text-muted-foreground">{getProductName(order.product_id)}</p>
+                  </div>
+                  {getStatusBadge(order.status || "Pending")}
+                </div>
+                <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm">
+                  <div>
+                    <span className="text-muted-foreground">Qty: </span>
+                    <span className="font-medium">{order.quantity}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Total: </span>
+                    <span className="font-medium">${(order.total || 0).toFixed(2)}</span>
+                  </div>
+                </div>
+                <div className="mt-3 flex items-center gap-1">
+                  {order.status === "Pending" && (
+                    <Button variant="ghost" size="icon-sm" onClick={() => handleFulfill(order)} title="Fulfill order">
+                      <Check className="h-4 w-4 text-[#00C853]" />
+                    </Button>
+                  )}
+                  {order.status === "Fulfilled" && (
+                    <Button variant="ghost" size="icon-sm" onClick={() => handleArchive(order.id)} title="Archive order">
+                      <Archive className="h-4 w-4 text-muted-foreground" />
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )) : (
+              <div className="flex flex-col items-center justify-center py-16 text-center">
+                <div className="rounded-full bg-muted p-4 mb-4">
+                  <ShoppingCart className="h-8 w-8 text-muted-foreground" />
+                </div>
+                <h3 className="font-semibold text-foreground mb-2">No orders yet</h3>
+                <p className="text-sm text-muted-foreground mb-4">Create your first sales order.</p>
+                <Button onClick={() => setShowAddModal(true)} className="gap-2">
+                  <Plus className="h-4 w-4" /> Create Order
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
       </Tabs>
 

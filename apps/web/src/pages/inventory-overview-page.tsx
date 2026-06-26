@@ -191,14 +191,14 @@ export function InventoryOverviewPage() {
       </div>
 
       <div className="rounded-xl border border-border bg-card shadow-sm">
-        <div className="flex items-center justify-between border-b border-border p-4">
+        <div className="flex flex-col gap-3 border-b border-border p-4 sm:flex-row sm:items-center sm:justify-between">
           <h3 className="font-semibold text-foreground">All Products</h3>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <div className="relative">
               <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder="Search products..."
-                className="w-64 pl-9"
+                className="w-full pl-9 sm:w-64"
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value)
@@ -213,7 +213,7 @@ export function InventoryOverviewPage() {
                 setCurrentPage(1)
               }}
             >
-              <SelectTrigger className="w-36">
+              <SelectTrigger className="w-full sm:w-36">
                 <SelectValue placeholder="Filter" />
               </SelectTrigger>
               <SelectContent>
@@ -226,7 +226,7 @@ export function InventoryOverviewPage() {
           </div>
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="hidden overflow-x-auto sm:block">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border bg-muted/30">
@@ -298,6 +298,43 @@ export function InventoryOverviewPage() {
           </table>
         </div>
 
+        <div className="divide-y divide-border sm:hidden">
+          {paginatedProducts.map((product) => {
+            const status = getStatus(product)
+            const StockIcon = status.icon
+            return (
+              <div key={product.id} className="p-4">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <p className="font-medium text-foreground">{product.name}</p>
+                    <p className="text-xs text-muted-foreground font-mono">{product.sku}</p>
+                  </div>
+                  <Badge variant={status.variant} className="gap-1 shrink-0">
+                    <StockIcon className="h-3 w-3" />
+                    {status.label}
+                  </Badge>
+                </div>
+                <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm">
+                  <div>
+                    <span className="text-muted-foreground">Category: </span>
+                    <span>{product.category || "-"}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Stock: </span>
+                    <span className={`font-medium ${(product.stock_on_hand || 0) <= (product.reorder_point || 0) ? "text-destructive" : "text-foreground"}`}>
+                      {product.stock_on_hand || 0}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Reorder: </span>
+                    <span>{product.reorder_point || 0}</span>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+
         {paginatedProducts.length === 0 && (
           <div className="p-12 text-center text-muted-foreground">
             No products found. Add products to see inventory.
@@ -305,7 +342,7 @@ export function InventoryOverviewPage() {
         )}
 
         {filteredProducts.length > 0 && (
-          <div className="flex items-center justify-between border-t border-border px-6 py-4">
+          <div className="flex flex-col items-center gap-4 border-t border-border px-6 py-4 sm:flex-row sm:justify-between">
             <p className="text-sm text-muted-foreground">
               Showing {startIndex + 1} to{" "}
               {Math.min(startIndex + ITEMS_PER_PAGE, filteredProducts.length)}{" "}

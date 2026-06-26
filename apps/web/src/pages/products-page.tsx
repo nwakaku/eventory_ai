@@ -241,7 +241,7 @@ export function ProductsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
           <h1 className="text-2xl font-semibold text-foreground">Products</h1>
           <p className="text-muted-foreground">Manage your product inventory</p>
@@ -252,7 +252,7 @@ export function ProductsPage() {
         </Button>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center gap-4">
         <div className="relative max-w-md flex-1">
           <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -272,7 +272,7 @@ export function ProductsPage() {
             setCurrentPage(1)
           }}
         >
-          <SelectTrigger className="w-36">
+          <SelectTrigger className="hidden w-36 sm:flex">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -303,98 +303,170 @@ export function ProductsPage() {
         </Select>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-muted/50">
-              <TableHead>Product Name</TableHead>
-              <TableHead>SKU</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead className="text-right">Stock</TableHead>
-              <TableHead className="text-right">Reorder</TableHead>
-              <TableHead className="text-right">Price</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="w-[100px]">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              <>
-                <SkeletonRow />
-                <SkeletonRow />
-                <SkeletonRow />
-                <SkeletonRow />
-                <SkeletonRow />
-              </>
-            ) : paginatedProducts.length > 0 ? (
-              paginatedProducts.map((product) => (
-                <TableRow key={product.id}>
-                  <TableCell className="font-medium">{product.name}</TableCell>
-                  <TableCell className="font-mono text-muted-foreground">
-                    {product.sku}
-                  </TableCell>
-                  <TableCell>{product.category || "-"}</TableCell>
-                  <TableCell className="text-right font-medium">
-                    {product.stock_on_hand}
-                  </TableCell>
-                  <TableCell className="text-right text-muted-foreground">
-                    {product.reorder_point}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {formatNGN(product.unit_price || 0)}
-                  </TableCell>
-                  <TableCell>
-                    {getStatusBadge(
-                      product.stock_on_hand,
-                      product.reorder_point
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1">
-                      <Button
-                        variant="ghost"
-                        size="icon-sm"
-                        onClick={() => setEditProduct(product)}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon-sm"
-                        onClick={() => setDeleteId(product.id)}
-                      >
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
+      <div className="rounded-xl border border-border bg-card shadow-sm">
+        <div className="hidden overflow-x-auto sm:block">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-muted/50">
+                <TableHead>Product Name</TableHead>
+                <TableHead>SKU</TableHead>
+                <TableHead>Category</TableHead>
+                <TableHead className="text-right">Stock</TableHead>
+                <TableHead className="text-right">Reorder</TableHead>
+                <TableHead className="text-right">Price</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="w-[100px]">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {isLoading ? (
+                <>
+                  <SkeletonRow />
+                  <SkeletonRow />
+                  <SkeletonRow />
+                  <SkeletonRow />
+                  <SkeletonRow />
+                </>
+              ) : paginatedProducts.length > 0 ? (
+                paginatedProducts.map((product) => (
+                  <TableRow key={product.id}>
+                    <TableCell className="font-medium">{product.name}</TableCell>
+                    <TableCell className="font-mono text-muted-foreground">
+                      {product.sku}
+                    </TableCell>
+                    <TableCell>{product.category || "-"}</TableCell>
+                    <TableCell className="text-right font-medium">
+                      {product.stock_on_hand}
+                    </TableCell>
+                    <TableCell className="text-right text-muted-foreground">
+                      {product.reorder_point}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {formatNGN(product.unit_price || 0)}
+                    </TableCell>
+                    <TableCell>
+                      {getStatusBadge(
+                        product.stock_on_hand,
+                        product.reorder_point
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          onClick={() => setEditProduct(product)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          onClick={() => setDeleteId(product.id)}
+                        >
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={8} className="h-48 text-center">
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="mb-4 rounded-full bg-muted p-4">
+                        <Package className="h-8 w-8 text-muted-foreground" />
+                      </div>
+                      <h3 className="mb-2 font-semibold text-foreground">
+                        No products found
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        {searchQuery ||
+                        statusFilter !== "all" ||
+                        categoryFilter !== "all"
+                          ? "No products match your filters."
+                          : "Add your first product to get started."}
+                      </p>
                     </div>
                   </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={8} className="h-48 text-center">
-                  <div className="flex flex-col items-center justify-center">
-                    <div className="mb-4 rounded-full bg-muted p-4">
-                      <Package className="h-8 w-8 text-muted-foreground" />
-                    </div>
-                    <h3 className="mb-2 font-semibold text-foreground">
-                      No products found
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {searchQuery ||
-                      statusFilter !== "all" ||
-                      categoryFilter !== "all"
-                        ? "No products match your filters."
-                        : "Add your first product to get started."}
-                    </p>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+
+        <div className="divide-y divide-border sm:hidden">
+          {isLoading ? (
+            <>
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="space-y-3 p-4">
+                  <div className="h-4 w-40 animate-pulse rounded bg-muted" />
+                  <div className="h-3 w-24 animate-pulse rounded bg-muted" />
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="h-3 w-full animate-pulse rounded bg-muted" />
+                    <div className="h-3 w-full animate-pulse rounded bg-muted" />
+                    <div className="h-3 w-full animate-pulse rounded bg-muted" />
+                    <div className="h-3 w-full animate-pulse rounded bg-muted" />
                   </div>
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+                  <div className="h-8 w-20 animate-pulse rounded bg-muted" />
+                </div>
+              ))}
+            </>
+          ) : paginatedProducts.length > 0 ? (
+            paginatedProducts.map((product) => (
+              <div key={product.id} className="p-4">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <p className="font-medium text-foreground truncate">{product.name}</p>
+                    <p className="text-xs text-muted-foreground font-mono">{product.sku}</p>
+                  </div>
+                  {getStatusBadge(product.stock_on_hand, product.reorder_point)}
+                </div>
+                <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm">
+                  <div>
+                    <span className="text-muted-foreground">Category: </span>
+                    <span>{product.category || "-"}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Stock: </span>
+                    <span className="font-medium">{product.stock_on_hand}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Reorder: </span>
+                    <span>{product.reorder_point}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Price: </span>
+                    <span className="font-medium">{formatNGN(product.unit_price || 0)}</span>
+                  </div>
+                </div>
+                <div className="mt-3 flex items-center gap-1">
+                  <Button variant="ghost" size="icon-sm" onClick={() => setEditProduct(product)}>
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="icon-sm" onClick={() => setDeleteId(product.id)}>
+                    <Trash2 className="h-4 w-4 text-destructive" />
+                  </Button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="flex flex-col items-center justify-center py-16 text-center">
+              <div className="mb-4 rounded-full bg-muted p-4">
+                <Package className="h-8 w-8 text-muted-foreground" />
+              </div>
+              <h3 className="mb-2 font-semibold text-foreground">No products found</h3>
+              <p className="text-sm text-muted-foreground">
+                {searchQuery || statusFilter !== "all" || categoryFilter !== "all"
+                  ? "No products match your filters."
+                  : "Add your first product to get started."}
+              </p>
+            </div>
+          )}
+        </div>
 
         {filteredProducts.length > 0 && (
-          <div className="flex items-center justify-between border-t border-border px-6 py-4">
+          <div className="flex flex-col items-center gap-4 border-t border-border px-6 py-4 sm:flex-row sm:justify-between">
             <p className="text-sm text-muted-foreground">
               Showing {startIndex + 1} to{" "}
               {Math.min(startIndex + ITEMS_PER_PAGE, filteredProducts.length)}{" "}

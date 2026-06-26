@@ -174,7 +174,7 @@ export function SettingsPage() {
             </div>
 
             <div className="space-y-4">
-              <div className="flex items-center gap-4">
+              <div className="flex flex-wrap items-center gap-4">
                 <Button variant="outline" className="gap-2">
                   Export Products (CSV)
                 </Button>

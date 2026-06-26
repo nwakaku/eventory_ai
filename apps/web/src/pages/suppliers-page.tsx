@@ -115,7 +115,7 @@ export function SuppliersPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
           <h1 className="text-2xl font-semibold text-foreground">Suppliers</h1>
           <p className="text-muted-foreground">Manage your product suppliers</p>
@@ -142,8 +142,8 @@ export function SuppliersPage() {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-        <div className="overflow-x-auto">
+      <div className="rounded-xl border border-border bg-card shadow-sm">
+        <div className="hidden overflow-x-auto sm:block">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border bg-muted/30">
@@ -228,6 +228,45 @@ export function SuppliersPage() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        <div className="divide-y divide-border sm:hidden">
+          {suppliers?.map((supplier) => (
+            <div key={supplier.id} className="p-4">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0 flex-1">
+                  <p className="font-medium text-foreground">{supplier.name}</p>
+                  <p className="text-xs text-muted-foreground">{supplier.email}</p>
+                </div>
+                <div className="flex items-center gap-1 shrink-0">
+                  <Button variant="ghost" size="icon" onClick={() => {
+                    setEditingSupplier({
+                      id: supplier.id,
+                      name: supplier.name,
+                      email: supplier.email,
+                      phone: supplier.phone || "",
+                      lead_time_days: supplier.lead_time_days || 7,
+                    })
+                  }}>
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="icon" onClick={() => setDeleteId(supplier.id)}>
+                    <Trash2 className="h-4 w-4 text-destructive" />
+                  </Button>
+                </div>
+              </div>
+              <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+                <div className="flex items-center gap-1">
+                  <Phone className="h-3.5 w-3.5 text-muted-foreground" />
+                  <span>{supplier.phone || "-"}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Clock className="h-3.5 w-3.5 text-muted-foreground" />
+                  <span>{supplier.lead_time_days || 0} days</span>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
         {(!suppliers || suppliers.length === 0) && (

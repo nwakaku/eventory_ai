@@ -180,7 +180,7 @@ export function RawMaterialsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
           <h1 className="text-2xl font-semibold text-foreground">Raw Materials</h1>
           <p className="text-muted-foreground">Track and manage raw material inventory</p>
@@ -191,74 +191,150 @@ export function RawMaterialsPage() {
         </Button>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-muted/50">
-              <TableHead>Material Name</TableHead>
-              <TableHead>SKU</TableHead>
-              <TableHead>Unit</TableHead>
-              <TableHead className="text-right">Quantity Available</TableHead>
-              <TableHead className="text-right">Reorder Level</TableHead>
-              <TableHead>Supplier</TableHead>
-              <TableHead className="text-right">Cost/Unit</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="w-[100px]">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              <>
-                <SkeletonRow />
-                <SkeletonRow />
-                <SkeletonRow />
-                <SkeletonRow />
-                <SkeletonRow />
-              </>
-            ) : rawMaterials && rawMaterials.length > 0 ? (
-              rawMaterials.map((material) => (
-                <TableRow key={material.id}>
-                  <TableCell className="font-medium">{material.name}</TableCell>
-                  <TableCell className="font-mono text-muted-foreground text-sm">{material.sku || "-"}</TableCell>
-                  <TableCell className="text-muted-foreground">{material.unit}</TableCell>
-                  <TableCell className="text-right font-medium">{material.quantity_available}</TableCell>
-                  <TableCell className="text-right text-muted-foreground">{material.reorder_level}</TableCell>
-                  <TableCell>
-                    <span className="text-sm">{getSupplierName(material.supplier_id)}</span>
-                  </TableCell>
-                  <TableCell className="text-right">${material.cost_per_unit?.toFixed(2) || "0.00"}</TableCell>
-                  <TableCell>{getStatusBadge(material.quantity_available, material.reorder_level)}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1">
-                      <Button variant="ghost" size="icon-sm" onClick={() => openEditModal(material)}>
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon-sm" onClick={() => setDeleteId(material.id)}>
-                        <Trash2 className="h-4 w-4 text-destructive" />
+      <div className="rounded-xl border border-border bg-card shadow-sm">
+        <div className="hidden overflow-x-auto sm:block">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-muted/50">
+                <TableHead>Material Name</TableHead>
+                <TableHead>SKU</TableHead>
+                <TableHead>Unit</TableHead>
+                <TableHead className="text-right">Quantity Available</TableHead>
+                <TableHead className="text-right">Reorder Level</TableHead>
+                <TableHead>Supplier</TableHead>
+                <TableHead className="text-right">Cost/Unit</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="w-[100px]">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {isLoading ? (
+                <>
+                  <SkeletonRow />
+                  <SkeletonRow />
+                  <SkeletonRow />
+                  <SkeletonRow />
+                  <SkeletonRow />
+                </>
+              ) : rawMaterials && rawMaterials.length > 0 ? (
+                rawMaterials.map((material) => (
+                  <TableRow key={material.id}>
+                    <TableCell className="font-medium">{material.name}</TableCell>
+                    <TableCell className="font-mono text-muted-foreground text-sm">{material.sku || "-"}</TableCell>
+                    <TableCell className="text-muted-foreground">{material.unit}</TableCell>
+                    <TableCell className="text-right font-medium">{material.quantity_available}</TableCell>
+                    <TableCell className="text-right text-muted-foreground">{material.reorder_level}</TableCell>
+                    <TableCell>
+                      <span className="text-sm">{getSupplierName(material.supplier_id)}</span>
+                    </TableCell>
+                    <TableCell className="text-right">${material.cost_per_unit?.toFixed(2) || "0.00"}</TableCell>
+                    <TableCell>{getStatusBadge(material.quantity_available, material.reorder_level)}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <Button variant="ghost" size="icon-sm" onClick={() => openEditModal(material)}>
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="icon-sm" onClick={() => setDeleteId(material.id)}>
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={9} className="h-48 text-center">
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="rounded-full bg-muted p-4 mb-4">
+                        <Package className="h-8 w-8 text-muted-foreground" />
+                      </div>
+                      <h3 className="font-semibold text-foreground mb-2">No materials yet</h3>
+                      <p className="text-sm text-muted-foreground mb-4">Add your first raw material to get started.</p>
+                      <Button onClick={openAddModal} className="gap-2">
+                        <Plus className="h-4 w-4" />
+                        Add Material
                       </Button>
                     </div>
                   </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={9} className="h-48 text-center">
-                  <div className="flex flex-col items-center justify-center">
-                    <div className="rounded-full bg-muted p-4 mb-4">
-                      <Package className="h-8 w-8 text-muted-foreground" />
-                    </div>
-                    <h3 className="font-semibold text-foreground mb-2">No materials yet</h3>
-                    <p className="text-sm text-muted-foreground mb-4">Add your first raw material to get started.</p>
-                    <Button onClick={openAddModal} className="gap-2">
-                      <Plus className="h-4 w-4" />
-                      Add Material
-                    </Button>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+
+        <div className="divide-y divide-border sm:hidden">
+          {isLoading ? (
+            <>
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="space-y-3 p-4">
+                  <div className="h-4 w-40 animate-pulse rounded bg-muted" />
+                  <div className="h-3 w-24 animate-pulse rounded bg-muted" />
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="h-3 w-full animate-pulse rounded bg-muted" />
+                    <div className="h-3 w-full animate-pulse rounded bg-muted" />
+                    <div className="h-3 w-full animate-pulse rounded bg-muted" />
+                    <div className="h-3 w-full animate-pulse rounded bg-muted" />
                   </div>
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+                  <div className="h-8 w-20 animate-pulse rounded bg-muted" />
+                </div>
+              ))}
+            </>
+          ) : rawMaterials && rawMaterials.length > 0 ? (
+            rawMaterials.map((material) => (
+              <div key={material.id} className="p-4">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <p className="font-medium text-foreground truncate">{material.name}</p>
+                    <p className="text-xs text-muted-foreground font-mono">{material.sku || "-"}</p>
+                  </div>
+                  {getStatusBadge(material.quantity_available, material.reorder_level)}
+                </div>
+                <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm">
+                  <div>
+                    <span className="text-muted-foreground">Unit: </span>
+                    <span>{material.unit}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Qty: </span>
+                    <span className="font-medium">{material.quantity_available}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Reorder: </span>
+                    <span>{material.reorder_level}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Cost/Unit: </span>
+                    <span>${material.cost_per_unit?.toFixed(2) || "0.00"}</span>
+                  </div>
+                  <div className="col-span-2">
+                    <span className="text-muted-foreground">Supplier: </span>
+                    <span>{getSupplierName(material.supplier_id)}</span>
+                  </div>
+                </div>
+                <div className="mt-3 flex items-center gap-1">
+                  <Button variant="ghost" size="icon-sm" onClick={() => openEditModal(material)}>
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="icon-sm" onClick={() => setDeleteId(material.id)}>
+                    <Trash2 className="h-4 w-4 text-destructive" />
+                  </Button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="flex flex-col items-center justify-center py-16 text-center">
+              <div className="rounded-full bg-muted p-4 mb-4">
+                <Package className="h-8 w-8 text-muted-foreground" />
+              </div>
+              <h3 className="font-semibold text-foreground mb-2">No materials yet</h3>
+              <p className="text-sm text-muted-foreground mb-4">Add your first raw material to get started.</p>
+              <Button onClick={openAddModal} className="gap-2">
+                <Plus className="h-4 w-4" />
+                Add Material
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
 
       <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>

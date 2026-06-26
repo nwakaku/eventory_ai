@@ -154,21 +154,23 @@ export function ReportsPage() {
         <p className="text-muted-foreground">Analytics and insights</p>
       </div>
 
-      <div className="flex items-center gap-2 border-b border-border">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium transition-colors ${
-              activeTab === tab.id
-                ? "border-primary text-primary"
-                : "border-transparent text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <tab.icon className="h-4 w-4" />
-            {tab.label}
-          </button>
-        ))}
+      <div className="overflow-x-auto">
+        <div className="flex items-center gap-2 border-b border-border">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium transition-colors whitespace-nowrap ${
+                activeTab === tab.id
+                  ? "border-primary text-primary"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <tab.icon className="h-4 w-4" />
+              {tab.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="animate-in duration-200 fade-in">
@@ -393,6 +395,8 @@ export function ReportsPage() {
                 </h3>
               </div>
               {sortedPurchaseOrders.length > 0 ? (
+                <>
+                <div className="hidden overflow-x-auto sm:block">
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-border bg-muted/50">
@@ -446,6 +450,36 @@ export function ReportsPage() {
                     ))}
                   </tbody>
                 </table>
+                </div>
+
+                <div className="divide-y divide-border sm:hidden">
+                  {sortedPurchaseOrders.map((order) => (
+                    <div key={order.id} className="p-4">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium text-primary text-sm">{order.id.slice(0, 8)}</p>
+                          <p className="text-sm text-foreground">{getSupplierName(order.supplier_id)}</p>
+                        </div>
+                        {getStatusBadge(order.status || "Pending")}
+                      </div>
+                      <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm">
+                        <div className="col-span-2">
+                          <span className="text-muted-foreground">Product: </span>
+                          <span>{getProductName(order.product_id)}</span>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Qty: </span>
+                          <span className="font-medium">{order.quantity}</span>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Date: </span>
+                          <span>{order.created_at ? new Date(order.created_at).toLocaleDateString() : "-"}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                </>
               ) : (
                 <div className="flex flex-col items-center justify-center py-16 text-center">
                   <div className="mb-4 rounded-full bg-muted p-4">

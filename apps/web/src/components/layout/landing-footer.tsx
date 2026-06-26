@@ -31,11 +31,11 @@ export function LandingFooter() {
             <div className="flex items-center gap-2">
               <img
                 src="https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1746566762/growth_ggcqxd.png"
-                alt="Easivent"
+                alt="Easiventory"
                 className="h-9 w-9 object-contain sm:h-10 sm:w-10"
               />
               <span className="text-xl font-semibold text-white sm:text-2xl">
-                Easivent
+                Easiventory
               </span>
             </div>
             
@@ -72,7 +72,7 @@ export function LandingFooter() {
 
         <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 sm:mt-12 sm:flex-row sm:pt-8">
           <div className="text-center text-sm text-gray-400 sm:text-left">
-            © 2026 Easivent. All rights reserved.
+            © 2026 Easiventory. All rights reserved.
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1">
