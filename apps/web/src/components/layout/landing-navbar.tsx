@@ -19,14 +19,14 @@ export function LandingNavbar({ onLogin }: LandingNavbarProps) {
   return (
     <>
       <nav className="fixed top-0 right-0 left-0 z-50 border-b border-border bg-background/95 backdrop-blur-md">
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between sm:h-16">
+        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:h-16">
           <div className="flex items-center gap-2">
             <img
               src="https://res.cloudinary.com/dgbreoalg/image/upload/q_auto/f_auto/v1746566762/growth_ggcqxd.png"
               alt="Easiventory Logo"
               className="h-8 w-8 object-contain sm:h-9 sm:w-9"
             />
-            <span className="text-base font-semibold text-foreground sm:text-lg">
+            <span className="hidden sm:inline text-base font-semibold text-foreground sm:text-lg">
               Easiventory
             </span>
           </div>
@@ -93,7 +93,7 @@ export function LandingNavbar({ onLogin }: LandingNavbarProps) {
 
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-40 bg-background pt-14 sm:pt-16 md:hidden">
-          <div className="mx-auto flex max-w-6xl flex-col gap-4 p-4 sm:p-6">
+          <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-8">
             <button
               onClick={() => scrollToSection("features")}
               className="py-2 text-left text-base text-foreground sm:text-lg"

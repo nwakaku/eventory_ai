@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import AOS from "aos"
+import CountUp from "react-countup"
 import { Button } from "@workspace/ui/components/button"
 import {
   LandingLayout,
@@ -150,7 +151,7 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
               data-aos-delay="0"
               className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl md:text-5xl lg:text-6xl"
             >
-              AI Inventory to simplify 
+              AI Inventory to simplify{" "}
               <br className="hidden sm:block" />
               and scale your business
             </h1>
@@ -210,7 +211,7 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
               className="rounded-xl border border-border bg-card p-6 text-center shadow-sm sm:p-8"
             >
               <div className="text-4xl font-bold text-primary sm:text-5xl md:text-6xl">
-                60%
+                <CountUp end={60} suffix="%" enableScrollSpy scrollSpyOnce />
               </div>
               <div className="mt-2 px-2 text-xs text-muted-foreground sm:mt-3 sm:text-sm">
                 Higher return on average per order, per year
@@ -222,7 +223,7 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
               className="rounded-xl border border-border bg-card p-6 text-center shadow-sm sm:p-8"
             >
               <div className="text-4xl font-bold text-primary sm:text-5xl md:text-6xl">
-                5x
+                <CountUp end={5} suffix="x" enableScrollSpy scrollSpyOnce />
               </div>
               <div className="mt-2 text-xs text-muted-foreground sm:mt-3 sm:text-sm">
                 Faster time-to-market
@@ -234,7 +235,7 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
               className="rounded-xl border border-border bg-card p-6 text-center shadow-sm sm:p-8"
             >
               <div className="text-4xl font-bold text-primary sm:text-5xl md:text-6xl">
-                6 weeks
+                <CountUp end={6} suffix=" weeks" enableScrollSpy scrollSpyOnce />
               </div>
               <div className="mt-2 text-xs text-muted-foreground sm:mt-3 sm:text-sm">
                 To fully implement vs 6–12 months for the usual ERPs
@@ -324,13 +325,29 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
                       {
                         label: "Total Products",
                         value: "1,234",
+                        numValue: 1234,
+                        separator: ",",
                         trend: "+12%",
                       },
-                      { label: "Low Stock Items", value: "23", trend: "-5%" },
-                      { label: "Pending Orders", value: "89", trend: "+8%" },
+                      {
+                        label: "Low Stock Items",
+                        value: "23",
+                        numValue: 23,
+                        trend: "-5%",
+                      },
+                      {
+                        label: "Pending Orders",
+                        value: "89",
+                        numValue: 89,
+                        trend: "+8%",
+                      },
                       {
                         label: "Today's Sales",
                         value: "$12.5k",
+                        numValue: 12.5,
+                        decimals: 1,
+                        prefix: "$",
+                        suffix: "k",
                         trend: "+23%",
                       },
                     ].map((item) => (
@@ -342,7 +359,15 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
                           {item.label}
                         </div>
                         <div className="mt-1 text-xl font-bold text-foreground sm:text-2xl">
-                          {item.value}
+                          <CountUp
+                            end={item.numValue}
+                            separator={item.separator}
+                            decimals={item.decimals}
+                            prefix={item.prefix}
+                            suffix={item.suffix}
+                            enableScrollSpy
+                            scrollSpyOnce
+                          />
                         </div>
                         <div className="text-xs text-primary">{item.trend}</div>
                       </div>
@@ -475,7 +500,7 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
                 ].map((card, i) => (
                   <CarouselItem
                     key={i}
-                    className="basis-[30.77%] px-2"
+                    className="basis-full md:basis-1/2 lg:basis-[30.77%] px-2"
                   >
                     <FeatureCard
                       image={card.image}
