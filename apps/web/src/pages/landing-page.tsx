@@ -479,7 +479,7 @@ export function LandingPage({ onLogin }: { onLogin?: () => void }) {
                 {[
                   {
                     image: "https://res.cloudinary.com/dgbreoalg/image/upload/v1753713150/113607ef0b9e55ccebb249cd5cdfabb3_jiulfd.jpg",
-                    title: "Trace every batch and every lot",
+                    title: "Trace Real-Time batch and lot",
                     description: "Complete traceability from raw materials to finished goods. Meet compliance requirements with detailed audit trails.",
                   },
                   {
