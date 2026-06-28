@@ -123,60 +123,6 @@ This section explains the entire system from the ground up -- how every piece fi
 
 Easiventory is a **single-page application (SPA)** built on a **monorepo** architecture. "Monorepo" means the frontend code, the shared UI components, and the database configuration all live in the same repository. Turborepo orchestrates them so they build and deploy together seamlessly.
 
-```
-┌─────────────────────────────────────────────────┐
-│                   BROWSER                        │
-│  ┌─────────────┐  ┌──────────────────────────┐  │
-│  │ Landing Page│  │    Dashboard (Auth)       │  │
-│  │ (public)    │  │  - Products / Inventory   │  │
-│  │             │  │  - Sales / Purchase Ord   │  │
-│  │             │  │  - Production / Reports   │  │
-│  │             │  │  - Settings               │  │
-│  └──────┬──────┘  └──────────┬───────────────┘  │
-│         │                    │                   │
-│         └────────┬───────────┘                   │
-│                  │                               │
-│         ┌────────▼────────┐                      │
-│         │  React Router   │                      │
-│         │  (client-side)  │                      │
-│         └────────┬────────┘                      │
-│                  │                               │
-│         ┌────────▼────────┐                      │
-│         │  TanStack React │                      │
-│         │     Query       │  (caches DB data)    │
-│         └────────┬────────┘                      │
-└──────────────────┼───────────────────────────────┘
-                   │
-                   ▼
-        ┌───────────────────┐
-        │    Supabase SDK    │
-        │  (supabase-js)     │
-        └────────┬──────────┘
-                 │
-                 ▼
-    ┌─────────────────────────┐
-    │       SUPABASE          │
-    │  ┌───────────────────┐  │
-    │  │   PostgreSQL DB   │  │
-    │  │  (8 tables +      │  │
-    │  │   triggers + RLS) │  │
-    │  ├───────────────────┤  │
-    │  │  Auth Service     │  │
-    │  │  (email/password  │  │
-    │  │   + Google OAuth) │  │
-    │  ├───────────────────┤  │
-    │  │  Realtime         │  │
-    │  │  (live updates    │  │
-    │  │   via WebSocket)  │  │
-    │  └───────────────────┘  │
-    └─────────────────────────┘
-                 │
-                 ▼
-    ┌─────────────────────────┐
-    │   Google Gemini AI      │
-    │  (chatbot assistant)    │
-    └─────────────────────────┘
-```
 
 ### Frontend Architecture (The Part You See)
 
@@ -213,149 +159,27 @@ The `ProtectedRoute` component checks if a user has an active Supabase session. 
 
 #### Pages (What Each Screen Does)
 
-**Landing Page** (`landing-page.tsx` -- 706 lines)
-The public face of the application. Contains:
-- A hero section with headlines and CTA buttons
-- Animated statistics counters (using `react-countup`)
-- A features grid showing the main capabilities
-- A dashboard mockup image
-- An "integrations" section listing supported services
-- A testimonials carousel (using Embla Carousel)
-- A demo booking modal
-- A login modal that supports email/password sign-up, sign-in, and Google OAuth
+**Landing Page** -- Marketing homepage with hero section, animated stats, features grid, testimonials carousel, and login modal.
 
-**Dashboard** (`dashboard-page.tsx` -- 544 lines)
-The central command center. Shows:
-- KPI stat cards: total products, today's sales (count), weekly revenue (in NGN), low stock items count, supplier count, monthly revenue
-- A weekly sales bar chart (using Recharts)
-- A category breakdown section
-- Items that are about to expire or run out
-- Real-time "last updated" timestamp that refreshes via Supabase Realtime subscriptions (WebSocket)
-- Loading states and error handling throughout
+**Dashboard** -- Command center with KPI stat cards (products, sales, revenue, alerts), weekly sales bar chart, category breakdown, and real-time live updates.
 
-**Products Page** (`products-page.tsx` -- 758 lines)
-Full CRUD (Create, Read, Update, Delete) interface:
-- Responsive table that shows product name, SKU, category, stock, price, status
-- On mobile, switches to a card-based layout
-- Search bar that filters by name, SKU, or category
-- Status filter dropdown (all / in-stock / low-stock / out-of-stock)
-- Pagination: 10 items per page
-- Add/Edit modal with form validation
-- Delete with confirmation dialog
+**Products Page** -- Full CRUD interface with search, status filter, pagination, and responsive table/card layout.
 
-**Inventory Overview** (`inventory-overview-page.tsx` -- 401 lines)
-Monitors stock levels across all products:
-- Search and status filter
-- Color-coded status badges (green = in-stock, yellow = low-stock, red = out-of-stock)
-- Pagination
+**Inventory Overview** -- Stock level monitoring with status badges (in-stock, low-stock, out-of-stock), search, and filtering.
 
-**Sales Orders** (`sales-orders-page.tsx` -- 334 lines)
-Manage customer orders:
-- Tab-based filtering (All / Pending / Fulfilled / Archived)
-- Create order modal with product dropdown (quantity auto-calculates total from product price)
-- Fulfill action that updates the product's `stock_on_hand` (deducts quantity)
-- Archive action for completed orders
+**Sales Orders** -- Create, fulfill, and archive customer orders with auto stock deduction on fulfillment.
 
-**Purchase Orders** (`purchase-orders-page.tsx` -- 429 lines)
-Manage supplier orders:
-- AI Reorder Suggestions section that lists products where `stock_on_hand <= reorder_point`
-- One-click "Create PO" from reorder suggestions
-- Create PO modal with supplier and product selections
-- Status lifecycle: Draft -> Sent -> Received
-- Filtering by status
+**Purchase Orders** -- Supplier order management with Draft -> Sent -> Received lifecycle and AI reorder suggestions.
 
-**Production Board** (`production-page.tsx` -- 323 lines)
-Kanban-style board for manufacturing:
-- Three columns: Planned, In Progress, Completed
-- Each production order card shows product ID, quantity, and progress percentage
-- Progress bar visualization
-- Move orders forward or backward through stages
-- Add and edit production orders
+**Production Board** -- Kanban-style board with Planned / In Progress / Completed columns and progress tracking.
 
-**Raw Materials** (`raw-materials-page.tsx` -- 466 lines)
-Manage manufacturing inputs:
-- Full CRUD with supplier linking
-- Unit tracking (kg, m, L, pcs, rolls)
-- Stock status: available / low / out-of-stock
+**Raw Materials** -- Material catalog with supplier linking, unit tracking (kg, m, L, pcs, rolls), and stock monitoring.
 
-**Suppliers** (`suppliers-page.tsx` -- 447 lines)
-Manage vendor information:
-- Full CRUD with name, email, phone, lead time
-- Cards layout showing all supplier details
-- Delete with confirmation
+**Suppliers** -- Vendor management with name, email, phone, and lead time tracking.
 
-**Reports** (`reports-page.tsx` -- 525 lines)
-Analytics and data visualization:
-- Three tabs: Stock Health, Sales Velocity, Reorder History
-- Stock Health: Bar chart comparing each product's current stock against its reorder point
-- Sales Velocity: 30-day line chart of sales trends, plus top products ranking table
-- Reorder History: Bar chart of supplier purchase orders over time
-- All data computed from live database queries
+**Reports** -- Analytics with stock health bar chart, 30-day sales velocity line chart, top products ranking, and PO history.
 
-**Settings** (`settings-page.tsx` -- 259 lines)
-User account management:
-- Profile section with user email
-- Theme selector (light, dark, system)
-- Notification preferences (placeholder)
-- Data management (CSV export placeholders)
-- Security section
-- Danger zone for destructive actions
-
-#### State Management: Two Approaches
-
-The codebase uses **two different state management patterns** side by side:
-
-**Approach 1: TanStack React Query Hooks (the newer pattern)**
-
-Each entity type has its own hook file in `hooks/`:
-
-| Hook File | What It Provides |
-|-----------|-----------------|
-| `useProducts.ts` | Fetch all, create, update, delete products |
-| `useSuppliers.ts` | Fetch all, create, update, delete suppliers |
-| `useRawMaterials.ts` | Fetch all, create, update, delete raw materials |
-| `useProductionOrders.ts` | Fetch all, create, update, delete production orders |
-| `useSalesOrders.ts` | Fetch all, create, update, delete sales orders |
-| `usePurchaseOrders.ts` | Fetch all, create, update, delete purchase orders |
-| `useTransactions.ts` | Fetch all transactions |
-| `useTheme.ts` | Simple light/dark toggle via localStorage |
-
-Each hook follows the same pattern:
-- A `useGetAll*` query that fetches data from Supabase
-- `useCreate*`, `useUpdate*`, `useDelete*` mutations
-- On success, the mutation invalidates the query cache so the list automatically refreshes
-- Error handling through the global QueryClient `onError` callback, which shows a toast notification
-
-**Approach 2: React Context API (legacy)**
-
-The `InventoryContext` (`context/inventory-context.tsx`) fetches ALL data at once when the app loads and stores it in React state. It also provides mutation functions for sales orders, purchase orders, and production orders with optimistic local state updates.
-
-#### Layout Components
-
-**App Layout** (`app-layout.tsx`):
-- Sidebar (collapsible on desktop, overlay on mobile)
-- Navbar with hamburger menu toggle on mobile
-- `<Outlet />` for rendering child routes
-- Floating ChatBot widget
-
-**Sidebar** (`sidebar.tsx`):
-- Navigation links to all dashboard pages
-- Collapsible to icon-only mode on desktop
-- Overlay drawer on mobile with backdrop
-- Uses `NavLink` from React Router for active state highlighting
-- Logo and brand name at top
-- Settings link and collapse toggle at bottom
-
-**ChatBot** (`chatbot.tsx` -- 418 lines):
-- Floating button in bottom-right corner
-- Opens a chat panel with:
-  - Quick insight buttons (5 pre-built queries)
-  - Text input for custom questions
-  - Message history with user/assistant distinction
-  - Bold text rendering in responses
-- Uses Google Gemini AI directly from the browser
-- Sends business data context (products, transactions, suppliers) with each query
-- Response formatting includes NGN currency formatting
+**Settings** -- User profile, theme selector, notification preferences, and data management.
 
 ### Backend Architecture (The Part You Don't See)
 
@@ -369,93 +193,20 @@ There is **no traditional backend server**. Easiventory uses **Supabase** as a B
 
 The frontend talks directly to Supabase using the `supabase-js` SDK. This is called a **serverless architecture** -- there are no custom API endpoints to maintain.
 
-#### Database Schema (8 Tables)
+#### Database Overview
 
-The database is defined in `supabase/supabase/migrations/001_create_tables.sql`.
+The database uses 8 tables defined in `supabase/supabase/migrations/001_create_tables.sql`:
 
-**suppliers** -- Who you buy from
-| Column | Type | Purpose |
-|--------|------|---------|
-| `id` | UUID (auto) | Unique identifier |
-| `name` | VARCHAR(255) | Supplier company name |
-| `email` | VARCHAR(255) | Contact email (unique) |
-| `phone` | VARCHAR(50) | Contact phone number |
-| `lead_time_days` | INTEGER | Days between ordering and receiving |
-| `created_at` | TIMESTAMPTZ | When the record was created |
-
-**products** -- What you sell
-| Column | Type | Purpose |
-|--------|------|---------|
-| `id` | UUID (auto) | Unique identifier |
-| `name` | VARCHAR(255) | Product name |
-| `sku` | VARCHAR(100) | Stock Keeping Unit (unique) |
-| `category` | VARCHAR(100) | Product category |
-| `stock_on_hand` | INTEGER | Current quantity in stock |
-| `reorder_point` | INTEGER | Minimum stock before reordering |
-| `unit_price` | DECIMAL(10,2) | Price per unit |
-| `status` | VARCHAR(50) | in-stock / low-stock / out-of-stock (auto-updated) |
-| `created_at` | TIMESTAMPTZ | When the record was created |
-
-**raw_materials** -- What goes into production
-| Column | Type | Purpose |
-|--------|------|---------|
-| `id` | UUID (auto) | Unique identifier |
-| `name` | VARCHAR(255) | Material name |
-| `sku` | VARCHAR(100) | Material SKU |
-| `unit` | VARCHAR(50) | Unit of measure (kg, m, L, pcs, rolls) |
-| `quantity_available` | INTEGER | Current stock |
-| `reorder_level` | INTEGER | Minimum before reordering |
-| `cost_per_unit` | DECIMAL(10,2) | Cost per unit |
-| `supplier_id` | UUID (FK) | Links to suppliers table |
-| `created_at` | TIMESTAMPTZ | When created |
-
-**production_orders** -- Manufacturing jobs
-| Column | Type | Purpose |
-|--------|------|---------|
-| `id` | UUID (auto) | Unique identifier |
-| `product_id` | UUID (FK) | Links to products table |
-| `quantity` | INTEGER | How many units to produce |
-| `status` | VARCHAR(50) | Planned / In Progress / Completed |
-| `completion_percent` | INTEGER | 0-100% progress |
-| `created_at` | TIMESTAMPTZ | When created |
-
-**production_order_materials** -- Bill of Materials (BOM)
-| Column | Type | Purpose |
-|--------|------|---------|
-| `id` | UUID (auto) | Unique identifier |
-| `production_order_id` | UUID (FK) | Links to production_orders |
-| `raw_material_id` | UUID (FK) | Links to raw_materials |
-| `quantity_required` | INTEGER | How much material needed |
-
-**sales_orders** -- Customer orders
-| Column | Type | Purpose |
-|--------|------|---------|
-| `id` | UUID (auto) | Unique identifier |
-| `customer` | VARCHAR(255) | Customer name |
-| `product_id` | UUID (FK) | Links to products table |
-| `quantity` | INTEGER | How many units |
-| `total` | DECIMAL(10,2) | Total price (qty * unit price) |
-| `status` | VARCHAR(50) | Pending / Fulfilled / Archived |
-| `created_at` | TIMESTAMPTZ | When ordered |
-
-**purchase_orders** -- Supplier orders
-| Column | Type | Purpose |
-|--------|------|---------|
-| `id` | UUID (auto) | Unique identifier |
-| `supplier_id` | UUID (FK) | Links to suppliers table |
-| `product_id` | UUID (FK, nullable) | Links to products table |
-| `quantity` | INTEGER | How many units |
-| `status` | VARCHAR(50) | Draft / Sent / Received |
-| `created_at` | TIMESTAMPTZ | When created |
-
-**purchase_order_items** -- PO line items for raw materials
-| Column | Type | Purpose |
-|--------|------|---------|
-| `id` | UUID (auto) | Unique identifier |
-| `purchase_order_id` | UUID (FK) | Links to purchase_orders |
-| `raw_material_id` | UUID (FK) | Links to raw_materials |
-| `quantity` | INTEGER | How much material |
-| `cost_per_unit` | DECIMAL(10,2) | Cost per unit |
+| Table | Purpose |
+|-------|---------|
+| `suppliers` | Vendor contact info and lead times |
+| `products` | Product catalog with SKU, category, stock, price, and auto-updated status |
+| `raw_materials` | Manufacturing inputs with unit tracking and supplier links |
+| `production_orders` | Manufacturing jobs with status (Planned / In Progress / Completed) and progress |
+| `production_order_materials` | Bill of Materials linking production orders to raw materials |
+| `sales_orders` | Customer orders with status lifecycle (Pending / Fulfilled / Archived) |
+| `purchase_orders` | Supplier orders with status lifecycle (Draft / Sent / Received) |
+| `purchase_order_items` | Purchase order line items for raw materials |
 
 #### Database Trigger (The Smart Part)
 
@@ -493,17 +244,7 @@ The bot can answer questions like:
 
 #### Realtime Updates
 
-The dashboard uses Supabase Realtime to listen for changes:
-```javascript
-client
-  .channel("products-dashboard")
-  .on("postgres_changes", { event: "*", schema: "public", table: "products" }, () => {
-    setLastUpdated(new Date())
-  })
-  .subscribe()
-```
-
-When any product or transaction changes in the database, the dashboard's "last updated" timestamp refreshes. This provides a live feel without polling.
+The dashboard listens for database changes via Supabase Realtime WebSocket subscriptions. When any product or transaction changes, the dashboard's "last updated" timestamp refreshes automatically -- no page reload needed.
 
 ---
 
@@ -615,33 +356,7 @@ easiventory/
 └── .gitignore
 ```
 
----
 
-## Data Flow: A Complete Walkthrough
-
-Here is what happens when a user performs a common action -- for example, **creating a new product**:
-
-1. User fills out the product form on the Products page and clicks "Save"
-2. React calls `useCreateProduct().mutate(formData)`
-3. The mutation function calls `supabase.from("products").insert(formData)`
-4. Supabase receives the request, checks RLS (is this user authenticated?)
-5. If authenticated, PostgreSQL inserts the row
-6. The database trigger `trigger_update_product_status` fires, calculating the initial status
-7. Supabase returns the new row to the frontend
-8. TanStack Query's `onSuccess` callback invalidates the products query cache
-9. All components using `useGetAllProducts()` automatically re-render with fresh data
-10. The user sees the new product in the table immediately
-
-For a **dashboard page load**:
-1. User navigates to `/dashboard`
-2. `DashboardPage` renders and calls `useGetAllProducts()`, `useGetAllTransactions()`, and `useGetAllSuppliers()`
-3. TanStack Query checks its cache -- if data was fetched within the last 30 seconds, it returns cached data
-4. If cache is stale, it fetches from Supabase
-5. While fetching, the page shows loading spinners (from `isLoading` state)
-6. When data arrives, KPI cards and charts render
-7. Realtime subscriptions start -- if another user updates a product, the "last updated" timestamp refreshes
-
----
 
 ## Getting Started
 
